@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Search Analytics Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dashboard-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .dashboard-title {
+            text-align: center;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .metric-card {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 32px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--accent-color);
+        }
+
+        .applications-sent {
+            --accent-color: linear-gradient(90deg, #4F46E5, #7C3AED);
+        }
+
+        .interview-invites {
+            --accent-color: linear-gradient(90deg, #059669, #10B981);
+        }
+
+        .profile-views {
+            --accent-color: linear-gradient(90deg, #7C2D12, #EA580C);
+        }
+
+        .saved-jobs {
+            --accent-color: linear-gradient(90deg, #92400E, #D97706);
+        }
+
+        .applications-sent::before {
+            background: linear-gradient(90deg, #4F46E5, #7C3AED);
+        }
+
+        .interview-invites::before {
+            background: linear-gradient(90deg, #059669, #10B981);
+        }
+
+        .profile-views::before {
+            background: linear-gradient(90deg, #7C2D12, #EA580C);
+        }
+
+        .saved-jobs::before {
+            background: linear-gradient(90deg, #92400E, #D97706);
+        }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .metric-title {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .growth-indicator {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #10B981;
+            font-size: 0.875rem;
+            font-weight: 600;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 4px 8px;
+            border-radius: 12px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .growth-icon {
+            width: 14px;
+            height: 14px;
+        }
+
+        .metric-value {
+            font-size: 3rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .metric-period {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.875rem;
+            font-weight: 400;
+        }
+
+        .action-section {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .action-button {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(16, 185, 129, 0.4);
+            background: linear-gradient(135deg, #059669, #047857);
+        }
+
+        .watermark {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8rem;
+            font-weight: 300;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            .dashboard-title {
+                font-size: 2rem;
+                margin-bottom: 30px;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .metric-card {
+                padding: 24px;
+            }
+
+            .metric-value {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Animation for loading effect */
+        .metric-card {
+            animation: slideUp 0.6s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .metric-card:nth-child(1) { animation-delay: 0.1s; }
+        .metric-card:nth-child(2) { animation-delay: 0.2s; }
+        .metric-card:nth-child(3) { animation-delay: 0.3s; }
+        .metric-card:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1 class="dashboard-title">Job Search Analytics</h1>
+        
+        <div class="metrics-grid">
+            <div class="metric-card applications-sent">
+                <div class="metric-header">
+                    <span class="metric-title">Applications Sent</span>
+                    <div class="growth-indicator">
+                        <svg class="growth-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/>
+                        </svg>
+                        +18%
+                    </div>
+                </div>
+                <div class="metric-value">24</div>
+                <div class="metric-period">Last 30 days</div>
+            </div>
+
+            <div class="metric-card interview-invites">
+                <div class="metric-header">
+                    <span class="metric-title">Interview Invites</span>
+                    <div class="growth-indicator">
+                        <svg class="growth-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/>
+                        </svg>
+                        +12%
+                    </div>
+                </div>
+                <div class="metric-value">7</div>
+                <div class="metric-period">Last 30 days</div>
+            </div>
+
+            <div class="metric-card profile-views">
+                <div class="metric-header">
+                    <span class="metric-title">Profile Views</span>
+                    <div class="growth-indicator">
+                        <svg class="growth-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/>
+                        </svg>
+                        +24%
+                    </div>
+                </div>
+                <div class="metric-value">156</div>
+                <div class="metric-period">Last 30 days</div>
+            </div>
+
+            <div class="metric-card saved-jobs">
+                <div class="metric-header">
+                    <span class="metric-title">Saved Jobs</span>
+                    <div class="growth-indicator">
+                        <svg class="growth-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/>
+                        </svg>
+                        +8%
+                    </div>
+                </div>
+                <div class="metric-value">32</div>
+                <div class="metric-period">Last 30 days</div>
+            </div>
+        </div>
+
+        <div class="action-section">
+            <button class="action-button" onclick="updateMetrics()">
+                Refresh Analytics
+            </button>
+        </div>
+    </div>
+
+    <div class="watermark">JobZee Analytics Dashboard</div>
+
+    <script>
+        // Add interactivity
+        function updateMetrics() {
+            const cards = document.querySelectorAll('.metric-card');
+            cards.forEach((card, index) => {
+                card.style.animation = 'none';
+                card.offsetHeight; // Trigger reflow
+                card.style.animation = `slideUp 0.6s ease-out ${index * 0.1}s forwards`;
+            });
+        }
+
+        // Add click events to cards
+        document.querySelectorAll('.metric-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+
+        // Save dashboard state to localStorage
+        function saveDashboardState() {
+            const metrics = {
+                applicationsSent: 24,
+                interviewInvites: 7,
+                profileViews: 156,
+                savedJobs: 32,
+                lastUpdated: new Date().toISOString()
+            };
+            localStorage.setItem('jobDashboardMetrics', JSON.stringify(metrics));
+        }
+
+        // Load dashboard state from localStorage
+        function loadDashboardState() {
+            const saved = localStorage.getItem('jobDashboardMetrics');
+            if (saved) {
+                const metrics = JSON.parse(saved);
+                console.log('Loaded saved metrics:', metrics);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDashboardState();
+            saveDashboardState();
+        });
+    </script>
+</body>
+</html>

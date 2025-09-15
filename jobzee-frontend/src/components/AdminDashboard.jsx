@@ -2,23 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { validateEmail, validatePhone, validateName } from '../utils/validationUtils';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-<<<<<<< HEAD
-=======
+
 import AdminSidebar from './AdminSidebar';
->>>>>>> da4180d (Initial commit)
+
 
 const AdminDashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('dashboard');
-<<<<<<< HEAD
-=======
+
   const [queries, setQueries] = useState([]);
   const [queryPage, setQueryPage] = useState(1);
   const [queryTotalPages, setQueryTotalPages] = useState(1);
   const [querySearch, setQuerySearch] = useState('');
   const [queryStatus, setQueryStatus] = useState('');
->>>>>>> da4180d (Initial commit)
+
   const [users, setUsers] = useState([]);
   const [showCreateUser, setShowCreateUser] = useState(false);
   const [showEditUser, setShowEditUser] = useState(false);
@@ -35,12 +33,12 @@ const AdminDashboard = () => {
   const [createEmployerTouched, setCreateEmployerTouched] = useState({});
   const [showViewEmployer, setShowViewEmployer] = useState(false);
   const [selectedEmployer, setSelectedEmployer] = useState(null);
-<<<<<<< HEAD
-=======
+
+
   const [showQueryModal, setShowQueryModal] = useState(false);
   const [selectedQuery, setSelectedQuery] = useState(null);
   const [notesDraft, setNotesDraft] = useState('');
->>>>>>> da4180d (Initial commit)
+
   const [showEditEmployer, setShowEditEmployer] = useState(false);
   const [editEmployerForm, setEditEmployerForm] = useState({ companyName: '', companyPhone: '', contactPersonName: '' });
   const [jobs, setJobs] = useState([]);
@@ -50,10 +48,9 @@ const AdminDashboard = () => {
   const [totalPages, setTotalPages] = useState(1);
   
   const navigate = useNavigate();
-<<<<<<< HEAD
-=======
+
   const [mobileOpen, setMobileOpen] = useState(false);
->>>>>>> da4180d (Initial commit)
+
   const admin = JSON.parse(localStorage.getItem('admin') || '{}');
 
   useEffect(() => {
@@ -262,8 +259,6 @@ const AdminDashboard = () => {
     }
   };
 
-<<<<<<< HEAD
-=======
   const updateEmployerVerification = async (employerId, payload) => {
     try {
       const token = localStorage.getItem('adminToken');
@@ -289,7 +284,7 @@ const AdminDashboard = () => {
     }
   };
 
->>>>>>> da4180d (Initial commit)
+
   const fetchJobs = async (page = 1, search = '', status = '') => {
     try {
       const token = localStorage.getItem('adminToken');
@@ -476,8 +471,7 @@ const AdminDashboard = () => {
     if (tab === 'users') fetchUsers();
     else if (tab === 'employers') fetchEmployers();
     else if (tab === 'jobs') fetchJobs();
-<<<<<<< HEAD
-=======
+
     else if (tab === 'queries') fetchQueries();
   };
 
@@ -574,7 +568,7 @@ const AdminDashboard = () => {
       console.error('Delete query error:', e);
       toast.error('Network error');
     }
->>>>>>> da4180d (Initial commit)
+
   };
 
   if (loading) {
@@ -592,15 +586,14 @@ const AdminDashboard = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
-<<<<<<< HEAD
-=======
+
               <button
                 className="md:hidden mr-3 text-gray-700 border rounded-md px-2 py-1"
                 onClick={() => setMobileOpen(true)}
               >
                 ☰
               </button>
->>>>>>> da4180d (Initial commit)
+
               <h1 className="text-2xl font-bold text-gray-900">JobZee Admin Panel</h1>
             </div>
             <div className="flex items-center space-x-4">
@@ -616,7 +609,7 @@ const AdminDashboard = () => {
         </div>
       </header>
 
-<<<<<<< HEAD
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Navigation Tabs */}
         <div className="bg-white rounded-lg shadow-sm mb-6">
@@ -663,7 +656,7 @@ const AdminDashboard = () => {
           admin={admin}
         />
         <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
->>>>>>> da4180d (Initial commit)
+
         {/* Dashboard Stats */}
         {activeTab === 'dashboard' && dashboardData && (
           <div className="space-y-6">
@@ -801,8 +794,7 @@ const AdminDashboard = () => {
           </div>
         )}
 
-<<<<<<< HEAD
-=======
+
         {/* Contact Queries */}
         {activeTab === 'queries' && (
           <div className="bg-white rounded-lg shadow-sm">
@@ -981,7 +973,7 @@ const AdminDashboard = () => {
           </div>
         )}
 
->>>>>>> da4180d (Initial commit)
+
         {/* Create Employer Modal */}
         {showCreateEmployer && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

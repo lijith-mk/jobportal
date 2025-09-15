@@ -1,8 +1,5 @@
 const Employer = require('../models/Employer');
-<<<<<<< HEAD
-=======
 const Job = require('../models/Job');
->>>>>>> da4180d (Initial commit)
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { OAuth2Client } = require('google-auth-library');
@@ -166,8 +163,6 @@ exports.registerEmployer = async (req, res) => {
   }
 };
 
-<<<<<<< HEAD
-=======
 // Create Job (Employer) with hybrid approval and posting limits
 exports.createJob = async (req, res) => {
   try {
@@ -329,8 +324,7 @@ exports.deleteJob = async (req, res) => {
     return res.status(500).json({ message: 'Failed to delete job' });
   }
 };
-
->>>>>>> da4180d (Initial commit)
+ 
 // Employer Login
 exports.loginEmployer = async (req, res) => {
   try {

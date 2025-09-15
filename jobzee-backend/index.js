@@ -38,26 +38,22 @@ const employerRoutes = require('./routes/employerRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const dashboardAssets = require('./routes/dashboardAssets');
-<<<<<<< HEAD
-=======
+
+
 const contactRoutes = require('./routes/contactRoutes');
 const jobRoutes = require('./routes/jobRoutes');
 const applicationRoutes = require('./routes/applicationRoutes');
 const savedJobRoutes = require('./routes/savedJobRoutes');
->>>>>>> da4180d (Initial commit)
 
 app.use('/api/auth', authRoutes);
 app.use('/api/employers', employerRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/dashboard', dashboardAssets);
-<<<<<<< HEAD
-=======
 app.use('/api/contact', contactRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use('/api/saved-jobs', savedJobRoutes);
->>>>>>> da4180d (Initial commit)
 
 // Debug endpoint to test frontend connectivity
 app.get('/api/debug', (req, res) => {

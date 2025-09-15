@@ -12,10 +12,8 @@ import Contact from "./pages/Contact";
 import Privacy from "./pages/Privacy";
 import PageNotFound from "./pages/PageNotFound";
 import Dashboard from "./pages/Dashboard";
-<<<<<<< HEAD
-=======
 import SavedJobs from "./pages/SavedJobs";
->>>>>>> da4180d (Initial commit)
+
 
 import Register from "./components/Register";
 import Login from "./components/Login";
@@ -32,13 +30,12 @@ import EmployerDashboard from "./pages/EmployerDashboard";
 import EmployerProfile from "./components/EmployerProfile";
 import AdminLogin from "./components/AdminLogin";
 import AdminDashboard from "./components/AdminDashboard";
-<<<<<<< HEAD
-=======
+
 import EmployerPostJob from "./components/EmployerPostJob";
 import EmployerMyJobs from "./pages/EmployerMyJobs";
 import JobApplications from "./pages/JobApplications";
 import MyApplications from "./pages/MyApplications";
->>>>>>> da4180d (Initial commit)
+
 
 function App() {
   // Initialize session manager and handle auto-logout
@@ -80,12 +77,11 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/jobs" element={<JobSearch />} />
-<<<<<<< HEAD
-=======
+
           <Route path="/saved-jobs" element={<SavedJobs />} />
           <Route path="/applications" element={<MyApplications />} />
           <Route path="/my-applications" element={<MyApplications />} />
->>>>>>> da4180d (Initial commit)
+
           <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/user-profile" element={<UserProfile />} />
@@ -101,12 +97,12 @@ function App() {
           <Route path="/employer/reset-password/:token" element={<EmployerResetPassword />} />
           <Route path="/employer/dashboard" element={<EmployerDashboard />} />
           <Route path="/employer/profile" element={<EmployerProfile />} />
-<<<<<<< HEAD
-=======
+
+
           <Route path="/employer/post-job" element={<EmployerPostJob />} />
           <Route path="/employer/my-jobs" element={<EmployerMyJobs />} />
           <Route path="/employer/jobs/:jobId/applications" element={<JobApplications />} />
->>>>>>> da4180d (Initial commit)
+
           
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />

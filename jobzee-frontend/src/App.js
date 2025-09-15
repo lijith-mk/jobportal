@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import HomeModern from "./pages/HomeModern"; // Ultra-modern version
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import Privacy from "./pages/Privacy";
 import PageNotFound from "./pages/PageNotFound";
 import Dashboard from "./pages/Dashboard";
 <<<<<<< HEAD
@@ -74,6 +75,7 @@ function App() {
           <Route path="/home-classic" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/privacy" element={<Privacy />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />

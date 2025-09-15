@@ -1,8 +1,22 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 const Contact = () => {
   const [animate, setAnimate] = useState(false);
+=======
+import React, { useState, useEffect, useRef } from 'react';
+import { toast } from 'react-toastify';
+import { validateEmail, validateName } from '../utils/validationUtils';
+import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
+
+const Contact = () => {
+  const [animate, setAnimate] = useState(false);
+  const mapContainerRef = useRef(null);
+  const mapRef = useRef(null);
+  const markerRef = useRef(null);
+>>>>>>> da4180d (Initial commit)
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -10,11 +24,17 @@ const Contact = () => {
     message: ''
   });
   const [loading, setLoading] = useState(false);
+<<<<<<< HEAD
+=======
+  const [errors, setErrors] = useState({ name: '', email: '', subject: '', message: '' });
+  const [touched, setTouched] = useState({ name: false, email: false, subject: false, message: false });
+>>>>>>> da4180d (Initial commit)
 
   useEffect(() => {
     setAnimate(true);
   }, []);
 
+<<<<<<< HEAD
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -25,6 +45,120 @@ const Contact = () => {
       setForm({ name: '', email: '', subject: '', message: '' });
       setLoading(false);
     }, 2000);
+=======
+  useEffect(() => {
+    const token = process.env.REACT_APP_MAPBOX_TOKEN;
+    if (!token || !mapContainerRef.current) return;
+
+    mapboxgl.accessToken = token;
+    const officeLng = Number(process.env.REACT_APP_OFFICE_LNG || 77.5946);
+    const officeLat = Number(process.env.REACT_APP_OFFICE_LAT || 12.9716);
+    const officeLabel = process.env.REACT_APP_OFFICE_ADDRESS || 'Our Office';
+
+    mapRef.current = new mapboxgl.Map({
+      container: mapContainerRef.current,
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [officeLng, officeLat],
+      zoom: 12
+    });
+
+    markerRef.current = new mapboxgl.Marker()
+      .setLngLat([officeLng, officeLat])
+      .setPopup(new mapboxgl.Popup({ offset: 24 }).setText(officeLabel))
+      .addTo(mapRef.current);
+
+    return () => {
+      try { if (mapRef.current) mapRef.current.remove(); } catch (_) {}
+    };
+  }, []);
+
+  const validateField = (field, value, onFocus = false) => {
+    let msg = '';
+    const v = String(value || '').trim();
+
+    if (field === 'name') {
+      if (!v) msg = 'Name is required';
+      else {
+        const r = validateName(v);
+        if (!r.isValid) msg = r.errors[0];
+      }
+    } else if (field === 'email') {
+      if (!v) msg = 'Email is required';
+      else {
+        const r = validateEmail(v);
+        if (!r.isValid) msg = r.errors[0];
+      }
+    } else if (field === 'subject') {
+      if (!v) msg = 'Subject is required';
+      else if (v.length < 3) msg = 'Subject must be at least 3 characters';
+    } else if (field === 'message') {
+      if (!v) msg = 'Message is required';
+      else if (v.length < 10) msg = 'Message must be at least 10 characters';
+    }
+
+    setErrors(prev => ({ ...prev, [field]: msg }));
+    return msg === '';
+  };
+
+  const handleFocus = (field) => {
+    setTouched(prev => ({ ...prev, [field]: true }));
+    // On focus, if empty, show required error immediately for better UX
+    if (!String(form[field] || '').trim()) {
+      const requiredMap = {
+        name: 'Name is required',
+        email: 'Email is required',
+        subject: 'Subject is required',
+        message: 'Message is required'
+      };
+      setErrors(prev => ({ ...prev, [field]: requiredMap[field] }));
+    }
+  };
+
+  const handleBlur = (field) => {
+    validateField(field, form[field]);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // Validate all fields before submit
+    const fields = ['name', 'email', 'subject', 'message'];
+    let allValid = true;
+    fields.forEach((f) => {
+      const ok = validateField(f, form[f]);
+      if (!ok) allValid = false;
+    });
+    setTouched({ name: true, email: true, subject: true, message: true });
+    if (!allValid) {
+      toast.error('Please fix the highlighted errors');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await fetch('http://localhost:5000/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(form)
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ message: 'Failed to submit' }));
+        throw new Error(err.message || 'Failed to submit');
+      }
+
+      toast.success('Thank you for your message! We\'ll get back to you soon.');
+      setForm({ name: '', email: '', subject: '', message: '' });
+      setErrors({ name: '', email: '', subject: '', message: '' });
+      setTouched({ name: false, email: false, subject: false, message: false });
+    } catch (error) {
+      toast.error(error.message || 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+>>>>>>> da4180d (Initial commit)
   };
 
   const contactInfo = [
@@ -117,10 +251,22 @@ const Contact = () => {
                         id="name"
                         required
                         value={form.name}
+<<<<<<< HEAD
                         onChange={(e) => setForm({ ...form, name: e.target.value })}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200"
                         placeholder="Enter your full name"
                       />
+=======
+                        onChange={(e) => { setForm({ ...form, name: e.target.value }); if (touched.name) validateField('name', e.target.value); }}
+                        onFocus={() => handleFocus('name')}
+                        onBlur={() => handleBlur('name')}
+                        className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 ${errors.name && touched.name ? 'border-red-300' : 'border-gray-300'}`}
+                        placeholder="Enter your full name"
+                      />
+                      {errors.name && touched.name && (
+                        <p className="text-sm text-red-600 mt-1">{errors.name}</p>
+                      )}
+>>>>>>> da4180d (Initial commit)
                     </div>
                     <div>
                       <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
@@ -131,10 +277,22 @@ const Contact = () => {
                         id="email"
                         required
                         value={form.email}
+<<<<<<< HEAD
                         onChange={(e) => setForm({ ...form, email: e.target.value })}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200"
                         placeholder="Enter your email"
                       />
+=======
+                        onChange={(e) => { setForm({ ...form, email: e.target.value }); if (touched.email) validateField('email', e.target.value); }}
+                        onFocus={() => handleFocus('email')}
+                        onBlur={() => handleBlur('email')}
+                        className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 ${errors.email && touched.email ? 'border-red-300' : 'border-gray-300'}`}
+                        placeholder="Enter your email"
+                      />
+                      {errors.email && touched.email && (
+                        <p className="text-sm text-red-600 mt-1">{errors.email}</p>
+                      )}
+>>>>>>> da4180d (Initial commit)
                     </div>
                   </div>
                   
@@ -147,10 +305,22 @@ const Contact = () => {
                       id="subject"
                       required
                       value={form.subject}
+<<<<<<< HEAD
                       onChange={(e) => setForm({ ...form, subject: e.target.value })}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200"
                       placeholder="What's this about?"
                     />
+=======
+                      onChange={(e) => { setForm({ ...form, subject: e.target.value }); if (touched.subject) validateField('subject', e.target.value); }}
+                      onFocus={() => handleFocus('subject')}
+                      onBlur={() => handleBlur('subject')}
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 ${errors.subject && touched.subject ? 'border-red-300' : 'border-gray-300'}`}
+                      placeholder="What's this about?"
+                    />
+                    {errors.subject && touched.subject && (
+                      <p className="text-sm text-red-600 mt-1">{errors.subject}</p>
+                    )}
+>>>>>>> da4180d (Initial commit)
                   </div>
                   
                   <div>
@@ -162,10 +332,22 @@ const Contact = () => {
                       required
                       rows="6"
                       value={form.message}
+<<<<<<< HEAD
                       onChange={(e) => setForm({ ...form, message: e.target.value })}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 resize-none"
                       placeholder="Tell us more about your inquiry..."
                     />
+=======
+                      onChange={(e) => { setForm({ ...form, message: e.target.value }); if (touched.message) validateField('message', e.target.value); }}
+                      onFocus={() => handleFocus('message')}
+                      onBlur={() => handleBlur('message')}
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 resize-none ${errors.message && touched.message ? 'border-red-300' : 'border-gray-300'}`}
+                      placeholder="Tell us more about your inquiry..."
+                    />
+                    {errors.message && touched.message && (
+                      <p className="text-sm text-red-600 mt-1">{errors.message}</p>
+                    )}
+>>>>>>> da4180d (Initial commit)
                   </div>
                   
                   <button
@@ -277,6 +459,7 @@ const Contact = () => {
           <div className={`bg-white rounded-lg shadow-lg p-8 ${
             animate ? 'animate-fade-in-up animation-delay-300' : 'opacity-0'
           }`}>
+<<<<<<< HEAD
             <div className="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden bg-gray-200">
               <div className="w-full h-64 bg-gradient-to-br from-blue-100 to-green-100 rounded-lg flex items-center justify-center">
                 <div className="text-center">
@@ -289,6 +472,9 @@ const Contact = () => {
                 </div>
               </div>
             </div>
+=======
+            <div ref={mapContainerRef} className="w-full h-96 rounded-lg overflow-hidden border border-gray-200" />
+>>>>>>> da4180d (Initial commit)
           </div>
         </div>
       </section>

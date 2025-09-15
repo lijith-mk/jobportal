@@ -214,6 +214,7 @@ const Register = () => {
   };
 
   return (
+<<<<<<< HEAD
     <div className="flex min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-violet-100">
       {/* Left Side - Creative Illustration Panel */}
       <div className="hidden md:flex md:w-1/2 lg:w-1/2 p-8 justify-center items-center">
@@ -240,10 +241,45 @@ const Register = () => {
                   {/* Magnifier */}
                   <circle cx="250" cy="250" r="24"/>
                   <path d="M268 268l28 28"/>
+=======
+    <div className="relative flex min-h-screen overflow-hidden bg-gradient-to-br from-[#E9F2FF] via-[#ECF5FF] to-[#F3E8FF]">
+      {/* Background subtle grid */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.30]"
+        style={{
+          backgroundImage:
+            "linear-gradient(to_right, rgba(37,99,235,0.07) 1px, transparent 1px), linear-gradient(to_bottom, rgba(124,58,237,0.06) 1px, transparent 1px)",
+          backgroundSize: "24px 24px"
+        }}
+      ></div>
+
+      {/* Left Side - Brand/benefits panel */}
+      <div className="hidden md:flex md:w-1/2 lg:w-1/2 px-10 py-12 justify-center items-center">
+        <div className="relative w-full max-w-md overflow-hidden rounded-4xl shadow-2xl hover-lift">
+          {/* Animated gradient backdrop */}
+          <div className="absolute inset-0 bg-gradient-to-br from-sky-500 via-indigo-600 to-fuchsia-600 animate-gradient"></div>
+          {/* Soft noise/pattern overlay */}
+          <div className="absolute inset-0 opacity-15" style={{backgroundImage: "radial-gradient(currentColor 1px, transparent 1px)", backgroundSize: "14px 14px", color: "#ffffff"}}></div>
+
+          <div className="relative p-9 text-white">
+            {/* Illustration */}
+            <div className="flex justify-center mb-7">
+              <svg viewBox="0 0 400 200" className="w-full max-w-xs tech-element animate-fade-in-up">
+                <g fill="none" stroke="#ffffff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="30" y="70" width="130" height="80" rx="14" fill="rgba(255,255,255,0.08)"/>
+                  <path d="M50 70v-8a14 14 0 0 1 14-14h62a14 14 0 0 1 14 14v8"/>
+                  <path d="M30 106h130"/>
+                  <circle cx="230" cy="120" r="22" fill="rgba(255,255,255,0.08)"/>
+                  <path d="M246 136l26 26"/>
+                  <rect x="210" y="40" width="150" height="100" rx="12" fill="rgba(255,255,255,0.08)"/>
+                  <circle cx="246" cy="70" r="10"/>
+                  <path d="M270 70h64M224 96h112M224 116h86"/>
+>>>>>>> da4180d (Initial commit)
                 </g>
               </svg>
             </div>
 
+<<<<<<< HEAD
             {/* Copy under drawing */}
             <div className="mx-auto mb-3 w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-500 to-violet-500 shadow-lg shadow-indigo-900/40 flex items-center justify-center">
               <svg viewBox="0 0 24 24" className="w-7 h-7 text-white" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -257,6 +293,30 @@ const Register = () => {
               <li className="flex items-center"><span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-indigo-500/20 text-indigo-300"><svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>Real‑time job alerts</li>
               <li className="flex items-center"><span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-indigo-500/20 text-indigo-300"><svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>Verified companies</li>
               <li className="flex items-center"><span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-indigo-500/20 text-indigo-300"><svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round"/></svg></span>Application tracking</li>
+=======
+            <h3 className="text-3xl font-semibold tracking-tight mb-3">Level up your career</h3>
+            <p className="text-white/85 mb-6">Create a standout profile and get matched to opportunities that matter.</p>
+
+            <ul className="space-y-3">
+              <li className="group flex items-start">
+                <span className="mt-0.5 mr-3 inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/20">
+                  <svg viewBox="0 0 24 24" className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                </span>
+                <p className="text-white/95">Polished profile with smart suggestions</p>
+              </li>
+              <li className="group flex items-start">
+                <span className="mt-0.5 mr-3 inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/20">
+                  <svg viewBox="0 0 24 24" className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                </span>
+                <p className="text-white/95">Personalised job alerts from verified employers</p>
+              </li>
+              <li className="group flex items-start">
+                <span className="mt-0.5 mr-3 inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/20">
+                  <svg viewBox="0 0 24 24" className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                </span>
+                <p className="text-white/95">Track applications and grow faster</p>
+              </li>
+>>>>>>> da4180d (Initial commit)
             </ul>
           </div>
         </div>

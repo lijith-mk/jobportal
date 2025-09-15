@@ -12,6 +12,10 @@ const {
   verifyResetToken
 } = require('../controllers/authController');
 const auth = require('../middleware/auth');
+<<<<<<< HEAD
+=======
+const { reportJob } = require('../controllers/jobController');
+>>>>>>> da4180d (Initial commit)
 const { authLimiter, passwordResetLimiter } = require('../middleware/rateLimiter');
 
 // Authentication routes
@@ -30,3 +34,9 @@ router.get('/profile', auth, getProfile);
 router.put('/profile', auth, updateProfile);
 
 module.exports = router;
+<<<<<<< HEAD
+=======
+
+// Job reporting (authenticated users)
+router.post('/jobs/:jobId/report', auth, reportJob);
+>>>>>>> da4180d (Initial commit)

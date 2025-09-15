@@ -58,6 +58,21 @@ const userSchema = new mongoose.Schema({
   resetPasswordToken: { type: String },
   resetPasswordExpires: { type: Date }
   ,
+<<<<<<< HEAD
+=======
+  // Saved jobs
+  savedJobs: [{
+    jobId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Job'
+    },
+    savedAt: {
+      type: Date,
+      default: Date.now
+    }
+  }],
+
+>>>>>>> da4180d (Initial commit)
   // Admin management fields
   isActive: { type: Boolean, default: true },
   status: { type: String, enum: ['active', 'suspended', 'deleted'], default: 'active' },

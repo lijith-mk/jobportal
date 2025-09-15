@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
+<<<<<<< HEAD
+=======
+import mapboxgl from 'mapbox-gl';
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+>>>>>>> da4180d (Initial commit)
 
 const EmployerProfile = () => {
   const [employer, setEmployer] = useState(null);
@@ -28,9 +35,21 @@ const EmployerProfile = () => {
     benefits: [],
     companyValues: [],
     workEnvironment: '',
+<<<<<<< HEAD
     remotePolicy: ''
   });
 
+=======
+    remotePolicy: '',
+    latitude: '',
+    longitude: ''
+  });
+
+  const mapContainerRef = useRef(null);
+  const mapRef = useRef(null);
+  const geocoderRef = useRef(null);
+
+>>>>>>> da4180d (Initial commit)
   const [newBenefit, setNewBenefit] = useState('');
   const [newValue, setNewValue] = useState('');
 
@@ -99,7 +118,13 @@ const EmployerProfile = () => {
           benefits: data.employer.benefits || [],
           companyValues: data.employer.companyValues || [],
           workEnvironment: data.employer.workCulture || '',
+<<<<<<< HEAD
           remotePolicy: ''
+=======
+          remotePolicy: '',
+          latitude: data.employer.headquarters?.coordinates?.latitude || '',
+          longitude: data.employer.headquarters?.coordinates?.longitude || ''
+>>>>>>> da4180d (Initial commit)
         });
       } else {
         toast.error('Failed to fetch profile');
@@ -118,6 +143,97 @@ const EmployerProfile = () => {
     }));
   };
 
+<<<<<<< HEAD
+=======
+  // Initialize Mapbox map and geocoder when editing
+  useEffect(() => {
+    if (!isEditing) return;
+    if (!mapContainerRef.current) return;
+    if (!process.env.REACT_APP_MAPBOX_TOKEN) {
+      console.warn('Missing REACT_APP_MAPBOX_TOKEN for Mapbox.');
+      return;
+    }
+
+    try {
+      mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
+
+      const initialCenter = [
+        formData.longitude ? Number(formData.longitude) : 0,
+        formData.latitude ? Number(formData.latitude) : 0
+      ];
+
+      mapRef.current = new mapboxgl.Map({
+        container: mapContainerRef.current,
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: formData.latitude && formData.longitude ? initialCenter : [0, 20],
+        zoom: formData.latitude && formData.longitude ? 10 : 1.5
+      });
+
+      const marker = new mapboxgl.Marker({ draggable: true });
+      if (formData.latitude && formData.longitude) {
+        marker.setLngLat(initialCenter).addTo(mapRef.current);
+      }
+
+      marker.on('dragend', () => {
+        const lngLat = marker.getLngLat();
+        setFormData(prev => ({
+          ...prev,
+          latitude: lngLat.lat,
+          longitude: lngLat.lng
+        }));
+      });
+
+      geocoderRef.current = new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        mapboxgl,
+        marker: false,
+        placeholder: 'Search company location'
+      });
+      mapRef.current.addControl(geocoderRef.current);
+
+      geocoderRef.current.on('result', (e) => {
+        const coords = e.result?.center;
+        const placeName = e.result?.place_name;
+        if (coords && coords.length === 2) {
+          const [lng, lat] = coords;
+          marker.setLngLat([lng, lat]).addTo(mapRef.current);
+          setFormData(prev => ({
+            ...prev,
+            location: placeName || prev.location,
+            latitude: lat,
+            longitude: lng
+          }));
+          mapRef.current.flyTo({ center: [lng, lat], zoom: 12 });
+        }
+      });
+
+      mapRef.current.on('click', (e) => {
+        const { lng, lat } = e.lngLat;
+        marker.setLngLat([lng, lat]).addTo(mapRef.current);
+        setFormData(prev => ({
+          ...prev,
+          latitude: lat,
+          longitude: lng
+        }));
+      });
+    } catch (err) {
+      console.error('Error initializing Mapbox:', err);
+    }
+
+    return () => {
+      try {
+        if (geocoderRef.current) {
+          geocoderRef.current.off('result');
+        }
+        if (mapRef.current) {
+          mapRef.current.remove();
+        }
+      } catch (_) {}
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEditing]);
+
+>>>>>>> da4180d (Initial commit)
   const uploadToCloudinary = async (file) => {
     const formData = new FormData();
     formData.append('photo', file);
@@ -200,7 +316,15 @@ const EmployerProfile = () => {
           city: formData.location,
           state: '',
           country: '',
+<<<<<<< HEAD
           zipCode: ''
+=======
+          zipCode: '',
+          coordinates: (formData.latitude && formData.longitude) ? {
+            latitude: Number(formData.latitude),
+            longitude: Number(formData.longitude)
+          } : undefined
+>>>>>>> da4180d (Initial commit)
         },
         website: formData.website,
         linkedinProfile: formData.linkedIn,
@@ -558,6 +682,7 @@ const EmployerProfile = () => {
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Location</label>
                   {isEditing ? (
+<<<<<<< HEAD
                     <input
                       type="text"
                       value={formData.location}
@@ -565,6 +690,25 @@ const EmployerProfile = () => {
                       className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-purple-500 transition-colors duration-200"
                       placeholder="City, Country"
                     />
+=======
+                    <div>
+                      <input
+                        type="text"
+                        value={formData.location}
+                        onChange={(e) => handleInputChange('location', e.target.value)}
+                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-purple-500 transition-colors duration-200 mb-3"
+                        placeholder="Search or type address"
+                      />
+                      <div ref={mapContainerRef} className="w-full h-72 rounded-xl overflow-hidden border border-gray-200" />
+                      <div className="mt-2 text-xs text-gray-500">
+                        {formData.latitude && formData.longitude ? (
+                          <span>Selected: {Number(formData.latitude).toFixed(5)}, {Number(formData.longitude).toFixed(5)}</span>
+                        ) : (
+                          <span>Pick a location on map or use the search bar</span>
+                        )}
+                      </div>
+                    </div>
+>>>>>>> da4180d (Initial commit)
                   ) : (
                     <p className="text-gray-900 bg-gray-50 rounded-xl px-4 py-3">{formData.location || 'Not provided'}</p>
                   )}

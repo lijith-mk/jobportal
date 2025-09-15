@@ -45,6 +45,23 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 
 To learn React, check out the [React documentation](https://reactjs.org/).
 
+<<<<<<< HEAD
+=======
+## Mapbox Setup
+
+Set an environment variable for Mapbox in a `.env` file at the project root:
+
+```
+REACT_APP_MAPBOX_TOKEN=your_mapbox_access_token
+# Optional: Contact page office location
+REACT_APP_OFFICE_ADDRESS=123 Job Street, Tech City, TC 12345
+REACT_APP_OFFICE_LAT=12.9716
+REACT_APP_OFFICE_LNG=77.5946
+```
+
+Restart the dev server after adding or changing `.env`.
+
+>>>>>>> da4180d (Initial commit)
 ### Code Splitting
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)

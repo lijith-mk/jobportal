@@ -2,11 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { validateEmail, validatePhone, validateName } from '../utils/validationUtils';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+<<<<<<< HEAD
+=======
+import AdminSidebar from './AdminSidebar';
+>>>>>>> da4180d (Initial commit)
 
 const AdminDashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('dashboard');
+<<<<<<< HEAD
+=======
+  const [queries, setQueries] = useState([]);
+  const [queryPage, setQueryPage] = useState(1);
+  const [queryTotalPages, setQueryTotalPages] = useState(1);
+  const [querySearch, setQuerySearch] = useState('');
+  const [queryStatus, setQueryStatus] = useState('');
+>>>>>>> da4180d (Initial commit)
   const [users, setUsers] = useState([]);
   const [showCreateUser, setShowCreateUser] = useState(false);
   const [showEditUser, setShowEditUser] = useState(false);
@@ -23,6 +35,12 @@ const AdminDashboard = () => {
   const [createEmployerTouched, setCreateEmployerTouched] = useState({});
   const [showViewEmployer, setShowViewEmployer] = useState(false);
   const [selectedEmployer, setSelectedEmployer] = useState(null);
+<<<<<<< HEAD
+=======
+  const [showQueryModal, setShowQueryModal] = useState(false);
+  const [selectedQuery, setSelectedQuery] = useState(null);
+  const [notesDraft, setNotesDraft] = useState('');
+>>>>>>> da4180d (Initial commit)
   const [showEditEmployer, setShowEditEmployer] = useState(false);
   const [editEmployerForm, setEditEmployerForm] = useState({ companyName: '', companyPhone: '', contactPersonName: '' });
   const [jobs, setJobs] = useState([]);
@@ -32,6 +50,10 @@ const AdminDashboard = () => {
   const [totalPages, setTotalPages] = useState(1);
   
   const navigate = useNavigate();
+<<<<<<< HEAD
+=======
+  const [mobileOpen, setMobileOpen] = useState(false);
+>>>>>>> da4180d (Initial commit)
   const admin = JSON.parse(localStorage.getItem('admin') || '{}');
 
   useEffect(() => {
@@ -240,6 +262,34 @@ const AdminDashboard = () => {
     }
   };
 
+<<<<<<< HEAD
+=======
+  const updateEmployerVerification = async (employerId, payload) => {
+    try {
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(`http://localhost:5000/api/admin/employers/${employerId}/verification`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        toast.success('Verification updated');
+        setEmployers(prev => prev.map(e => e._id === employerId ? { ...e, ...data.employer } : e));
+      } else {
+        toast.error(data.message || 'Failed to update verification');
+      }
+    } catch (error) {
+      console.error('Update employer verification error:', error);
+      toast.error('Network error occurred');
+    }
+  };
+
+>>>>>>> da4180d (Initial commit)
   const fetchJobs = async (page = 1, search = '', status = '') => {
     try {
       const token = localStorage.getItem('adminToken');
@@ -426,6 +476,105 @@ const AdminDashboard = () => {
     if (tab === 'users') fetchUsers();
     else if (tab === 'employers') fetchEmployers();
     else if (tab === 'jobs') fetchJobs();
+<<<<<<< HEAD
+=======
+    else if (tab === 'queries') fetchQueries();
+  };
+
+  const fetchQueries = async (page = 1, search = '', status = '') => {
+    try {
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(`http://localhost:5000/api/admin/queries?page=${page}&search=${encodeURIComponent(search)}&status=${encodeURIComponent(status)}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setQueries(data.queries);
+        setQueryTotalPages(data.totalPages);
+        setQueryPage(data.currentPage);
+      } else {
+        toast.error('Failed to fetch contact queries');
+      }
+    } catch (error) {
+      console.error('Queries fetch error:', error);
+      toast.error('Network error occurred');
+    }
+  };
+
+  const updateQueryStatus = async (id, status) => {
+    try {
+      const token = localStorage.getItem('adminToken');
+      const res = await fetch(`http://localhost:5000/api/admin/queries/${id}/status`, {
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success('Query updated');
+        setQueries(prev => prev.map(q => q._id === id ? data.query : q));
+      } else {
+        toast.error(data.message || 'Failed to update query');
+      }
+    } catch (e) {
+      console.error('Update query status error:', e);
+      toast.error('Network error');
+    }
+  };
+
+  const openQueryModal = (q) => {
+    setSelectedQuery(q);
+    setNotesDraft(q.adminNotes || '');
+    setShowQueryModal(true);
+  };
+
+  const saveQueryNotes = async () => {
+    if (!selectedQuery) return;
+    try {
+      const token = localStorage.getItem('adminToken');
+      const res = await fetch(`http://localhost:5000/api/admin/queries/${selectedQuery._id}/notes`, {
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminNotes: notesDraft })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success('Notes saved');
+        setQueries(prev => prev.map(q => q._id === selectedQuery._id ? data.query : q));
+        setSelectedQuery(data.query);
+      } else {
+        toast.error(data.message || 'Failed to save notes');
+      }
+    } catch (e) {
+      console.error('Save notes error:', e);
+      toast.error('Network error');
+    }
+  };
+
+  const deleteQuery = async (q) => {
+    if (!window.confirm('Delete this query? This cannot be undone.')) return;
+    try {
+      const token = localStorage.getItem('adminToken');
+      const res = await fetch(`http://localhost:5000/api/admin/queries/${q._id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(data.message || 'Query deleted');
+        setQueries(prev => prev.filter(x => x._id !== q._id));
+        if (selectedQuery && selectedQuery._id === q._id) setShowQueryModal(false);
+      } else {
+        toast.error(data.message || 'Failed to delete query');
+      }
+    } catch (e) {
+      console.error('Delete query error:', e);
+      toast.error('Network error');
+    }
+>>>>>>> da4180d (Initial commit)
   };
 
   if (loading) {
@@ -443,6 +592,15 @@ const AdminDashboard = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
+<<<<<<< HEAD
+=======
+              <button
+                className="md:hidden mr-3 text-gray-700 border rounded-md px-2 py-1"
+                onClick={() => setMobileOpen(true)}
+              >
+                ☰
+              </button>
+>>>>>>> da4180d (Initial commit)
               <h1 className="text-2xl font-bold text-gray-900">JobZee Admin Panel</h1>
             </div>
             <div className="flex items-center space-x-4">
@@ -458,6 +616,7 @@ const AdminDashboard = () => {
         </div>
       </header>
 
+<<<<<<< HEAD
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Navigation Tabs */}
         <div className="bg-white rounded-lg shadow-sm mb-6">
@@ -485,6 +644,26 @@ const AdminDashboard = () => {
           </nav>
         </div>
 
+=======
+      <div className="flex">
+        <AdminSidebar
+          activeTab={activeTab}
+          onTabChange={handleTabChange}
+          onLogout={handleLogout}
+          admin={admin}
+        />
+        {/* Mobile drawer */}
+        <AdminSidebar
+          isMobile
+          open={mobileOpen}
+          onClose={() => setMobileOpen(false)}
+          activeTab={activeTab}
+          onTabChange={handleTabChange}
+          onLogout={handleLogout}
+          admin={admin}
+        />
+        <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+>>>>>>> da4180d (Initial commit)
         {/* Dashboard Stats */}
         {activeTab === 'dashboard' && dashboardData && (
           <div className="space-y-6">
@@ -622,6 +801,187 @@ const AdminDashboard = () => {
           </div>
         )}
 
+<<<<<<< HEAD
+=======
+        {/* Contact Queries */}
+        {activeTab === 'queries' && (
+          <div className="bg-white rounded-lg shadow-sm">
+            <div className="p-6 border-b">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">Contact Queries</h3>
+                <button
+                  onClick={() => fetchQueries(queryPage, querySearch, queryStatus)}
+                  className="bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-800"
+                >
+                  Refresh
+                </button>
+              </div>
+              <div className="flex space-x-4">
+                <input
+                  type="text"
+                  placeholder="Search by name, email, subject..."
+                  value={querySearch}
+                  onChange={(e) => setQuerySearch(e.target.value)}
+                  className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <select
+                  value={queryStatus}
+                  onChange={(e) => setQueryStatus(e.target.value)}
+                  className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">All</option>
+                  <option value="new">New</option>
+                  <option value="in_progress">In Progress</option>
+                  <option value="resolved">Resolved</option>
+                </select>
+                <button
+                  onClick={() => fetchQueries(1, querySearch, queryStatus)}
+                  className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700"
+                >
+                  Search
+                </button>
+              </div>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">From</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Message</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Received</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {queries.map((q) => (
+                    <tr key={q._id}>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="font-medium text-gray-900">{q.name}</div>
+                        <div className="text-sm text-gray-500">{q.email}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{q.subject}</td>
+                      <td className="px-6 py-4 text-sm text-gray-700 max-w-md truncate" title={q.message}>{q.message}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`px-2 py-1 text-xs rounded-full ${
+                          q.status === 'resolved' ? 'bg-green-100 text-green-800' : q.status === 'in_progress' ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800'
+                        }`}>
+                          {q.status.replace('_', ' ')}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(q.createdAt).toLocaleString()}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm space-x-2">
+                        {q.status !== 'in_progress' && (
+                          <button onClick={() => updateQueryStatus(q._id, 'in_progress')} className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">In Progress</button>
+                        )}
+                        {q.status !== 'resolved' && (
+                          <button onClick={() => updateQueryStatus(q._id, 'resolved')} className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">Resolve</button>
+                        )}
+                        <button onClick={() => openQueryModal(q)} className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">View</button>
+                        <button onClick={() => deleteQuery(q)} className="bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-700">Delete</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Pagination */}
+            <div className="flex items-center justify-between p-4">
+              <div className="text-sm text-gray-600">Page {queryPage} of {queryTotalPages}</div>
+              <div className="space-x-2">
+                <button
+                  disabled={queryPage <= 1}
+                  onClick={() => fetchQueries(queryPage - 1, querySearch, queryStatus)}
+                  className="px-3 py-1 rounded border disabled:opacity-50"
+                >
+                  Prev
+                </button>
+                <button
+                  disabled={queryPage >= queryTotalPages}
+                  onClick={() => fetchQueries(queryPage + 1, querySearch, queryStatus)}
+                  className="px-3 py-1 rounded border disabled:opacity-50"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Query Detail Modal */}
+        {showQueryModal && selectedQuery && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 w-full max-w-2xl">
+              <h3 className="text-xl font-semibold mb-4">Query Details</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-800">
+                <div>
+                  <div className="text-sm text-gray-500">From</div>
+                  <div className="font-medium">{selectedQuery.name}</div>
+                  <div className="text-sm text-gray-600 break-all">{selectedQuery.email}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-gray-500">Submitted</div>
+                  <div className="font-medium">{new Date(selectedQuery.createdAt).toLocaleString()}</div>
+                </div>
+                <div className="md:col-span-2">
+                  <div className="text-sm text-gray-500">Subject</div>
+                  <div className="font-medium">{selectedQuery.subject}</div>
+                </div>
+                <div className="md:col-span-2">
+                  <div className="text-sm text-gray-500">Message</div>
+                  <div className="mt-1 p-3 border rounded bg-gray-50 whitespace-pre-wrap">{selectedQuery.message}</div>
+                </div>
+                <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <div className="text-sm text-gray-500">IP</div>
+                    <div className="font-medium break-all">{selectedQuery.metadata?.ip || '-'}</div>
+                  </div>
+                  <div className="md:col-span-2">
+                    <div className="text-sm text-gray-500">User Agent</div>
+                    <div className="font-medium break-all">{selectedQuery.metadata?.userAgent || '-'}</div>
+                  </div>
+                </div>
+                <div className="md:col-span-2">
+                  <div className="text-sm text-gray-500">Origin</div>
+                  <div className="font-medium break-all">{selectedQuery.metadata?.origin || '-'}</div>
+                </div>
+                <div className="md:col-span-2">
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm text-gray-500">Admin Notes</div>
+                    <div>
+                      <select
+                        value={selectedQuery.status}
+                        onChange={(e) => updateQueryStatus(selectedQuery._id, e.target.value)}
+                        className="px-3 py-1 border rounded"
+                      >
+                        <option value="new">New</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="resolved">Resolved</option>
+                      </select>
+                    </div>
+                  </div>
+                  <textarea
+                    rows={5}
+                    className="mt-1 w-full border rounded px-3 py-2"
+                    placeholder="Add internal notes..."
+                    value={notesDraft}
+                    onChange={(e) => setNotesDraft(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end space-x-2 mt-6">
+                <button onClick={() => setShowQueryModal(false)} className="px-4 py-2 rounded border">Close</button>
+                <button onClick={saveQueryNotes} className="px-4 py-2 rounded bg-blue-600 text-white">Save Notes</button>
+                <button onClick={() => deleteQuery(selectedQuery)} className="px-4 py-2 rounded bg-gray-700 text-white">Delete</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+>>>>>>> da4180d (Initial commit)
         {/* Create Employer Modal */}
         {showCreateEmployer && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -756,6 +1116,10 @@ const AdminDashboard = () => {
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+<<<<<<< HEAD
+=======
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Verification</th>
+>>>>>>> da4180d (Initial commit)
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                   </tr>
@@ -774,6 +1138,16 @@ const AdminDashboard = () => {
                           {emp.isActive !== false ? 'Active' : 'Suspended'}
                         </span>
                       </td>
+<<<<<<< HEAD
+=======
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center space-x-2">
+                          <span className={`px-2 py-1 text-xs rounded-full ${emp.isVerified ? 'bg-green-100 text-green-800' : emp.verificationStatus === 'rejected' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                            {emp.isVerified ? 'Verified' : (emp.verificationStatus || 'pending')}
+                          </span>
+                        </div>
+                      </td>
+>>>>>>> da4180d (Initial commit)
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {emp.createdAt ? new Date(emp.createdAt).toLocaleDateString() : '-'}
                       </td>
@@ -790,6 +1164,36 @@ const AdminDashboard = () => {
                         >
                           Edit
                         </button>
+<<<<<<< HEAD
+=======
+                        {!emp.isVerified && emp.verificationStatus !== 'rejected' && (
+                          <button
+                            onClick={() => updateEmployerVerification(emp._id, { isVerified: true, status: 'verified' })}
+                            className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+                          >
+                            Verify
+                          </button>
+                        )}
+                        {emp.isVerified && (
+                          <button
+                            onClick={() => updateEmployerVerification(emp._id, { isVerified: false, status: 'pending' })}
+                            className="bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-700"
+                          >
+                            Unverify
+                          </button>
+                        )}
+                        {!emp.isVerified && (
+                          <button
+                            onClick={() => {
+                              const reason = prompt('Reason for rejection:');
+                              if (reason !== null) updateEmployerVerification(emp._id, { status: 'rejected', notes: reason });
+                            }}
+                            className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+                          >
+                            Reject
+                          </button>
+                        )}
+>>>>>>> da4180d (Initial commit)
                         {emp.isActive !== false ? (
                           <button
                             onClick={() => {
@@ -1144,8 +1548,124 @@ const AdminDashboard = () => {
           </div>
         )}
 
+<<<<<<< HEAD
         {/* Similar tables for employers and jobs would go here */}
         {/* Add pagination controls */}
+=======
+        {/* Jobs Management */}
+        {activeTab === 'jobs' && (
+          <div className="bg-white rounded-lg shadow-sm">
+            <div className="p-6 border-b">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">Jobs Management</h3>
+                <button
+                  onClick={() => fetchJobs(1, searchTerm, filterStatus)}
+                  className="bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-800"
+                >
+                  Refresh
+                </button>
+              </div>
+              <div className="flex space-x-4">
+                <input
+                  type="text"
+                  placeholder="Search by title or company..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <select
+                  value={filterStatus}
+                  onChange={(e) => setFilterStatus(e.target.value)}
+                  className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">All Status</option>
+                  <option value="pending">Pending</option>
+                  <option value="approved">Approved</option>
+                  <option value="active">Active</option>
+                  <option value="rejected">Rejected</option>
+                </select>
+                <button
+                  onClick={() => fetchJobs(1, searchTerm, filterStatus)}
+                  className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700"
+                >
+                  Search
+                </button>
+              </div>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Posted</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {jobs.map((job) => (
+                    <tr key={job._id}>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="font-medium text-gray-900">{job.title}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{job.company}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{job.location}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{job.jobType}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`px-2 py-1 text-xs rounded-full ${
+                          job.status === 'active' ? 'bg-green-100 text-green-800' :
+                          job.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                          job.status === 'approved' ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800'
+                        }`}>
+                          {job.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(job.createdAt).toLocaleDateString()}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm space-x-2">
+                        {job.status === 'pending' && (
+                          <>
+                            <button onClick={() => updateJobStatus(job._id, 'approved')} className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Approve</button>
+                            <button onClick={() => updateJobStatus(job._id, 'rejected')} className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">Reject</button>
+                          </>
+                        )}
+                        {job.status === 'approved' && (
+                          <button onClick={() => updateJobStatus(job._id, 'active')} className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">Activate</button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="flex items-center justify-between p-4">
+              <div className="text-sm text-gray-600">Page {currentPage} of {totalPages}</div>
+              <div className="space-x-2">
+                <button
+                  disabled={currentPage <= 1}
+                  onClick={() => fetchJobs(currentPage - 1, searchTerm, filterStatus)}
+                  className="px-3 py-1 rounded border disabled:opacity-50"
+                >
+                  Prev
+                </button>
+                <button
+                  disabled={currentPage >= totalPages}
+                  onClick={() => fetchJobs(currentPage + 1, searchTerm, filterStatus)}
+                  className="px-3 py-1 rounded border disabled:opacity-50"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        {/* Add pagination controls */}
+        </main>
+>>>>>>> da4180d (Initial commit)
       </div>
     </div>
   );

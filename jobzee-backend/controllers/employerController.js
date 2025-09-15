@@ -1,4 +1,8 @@
 const Employer = require('../models/Employer');
+<<<<<<< HEAD
+=======
+const Job = require('../models/Job');
+>>>>>>> da4180d (Initial commit)
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { OAuth2Client } = require('google-auth-library');
@@ -162,6 +166,171 @@ exports.registerEmployer = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
+=======
+// Create Job (Employer) with hybrid approval and posting limits
+exports.createJob = async (req, res) => {
+  try {
+    const employer = await Employer.findById(req.employer.id);
+    if (!employer) {
+      return res.status(404).json({ message: 'Employer not found' });
+    }
+
+    const isFreePlan = employer.subscriptionPlan === 'free';
+    if (isFreePlan) {
+      const activeJobsCount = await Job.countDocuments({ employerId: employer._id, status: { $in: ['pending', 'approved', 'active'] } });
+      if (activeJobsCount >= 1) {
+        return res.status(403).json({
+          message: 'Free plan allows only 1 job post. Upgrade your plan to post more.',
+          errorType: 'free_plan_limit_reached'
+        });
+      }
+    } else {
+      if (!employer.canPostMoreJobs()) {
+        return res.status(403).json({
+          message: 'Job posting limit reached. Please upgrade your plan.',
+          errorType: 'job_posting_limit_reached',
+          currentUsage: employer.jobPostingsUsed,
+          limit: employer.jobPostingLimit
+        });
+      }
+    }
+
+    const {
+      title,
+      description,
+      location,
+      jobType,
+      experienceLevel,
+      salary,
+      requirements = [],
+      benefits = [],
+      skills = [],
+      remote = 'onsite'
+    } = req.body || {};
+
+    if (!title || !description || !location || !jobType || !experienceLevel) {
+      return res.status(400).json({ message: 'title, description, location, jobType, experienceLevel are required' });
+    }
+
+    const initialStatus = isFreePlan ? 'pending' : 'approved';
+
+    const job = await Job.create({
+      title: String(title).trim(),
+      description: String(description).trim(),
+      company: employer.companyName,
+      employerId: employer._id,
+      location: String(location).trim(),
+      jobType,
+      experienceLevel,
+      salary: salary || {},
+      requirements,
+      benefits,
+      skills,
+      remote,
+      status: initialStatus
+    });
+
+    if (!isFreePlan) {
+      job.status = 'active';
+      job.approvedAt = new Date();
+      await job.save();
+    }
+
+    if (!isFreePlan) {
+      await employer.incrementJobPosting();
+    }
+
+    return res.status(201).json({
+      message: isFreePlan
+        ? 'Job submitted for review. Admin approval required for free plan.'
+        : 'Job posted and auto-approved.',
+      job
+    });
+  } catch (err) {
+    console.error('Create job error:', err);
+    return res.status(500).json({ message: 'Failed to create job' });
+  }
+};
+
+// List employer jobs
+exports.listMyJobs = async (req, res) => {
+  try {
+    const { page = 1, limit = 10, status } = req.query;
+    const query = { employerId: req.employer.id };
+    if (status) query.status = status;
+    const jobs = await Job.find(query)
+      .sort({ createdAt: -1 })
+      .limit(Number(limit))
+      .skip((Number(page) - 1) * Number(limit));
+    const total = await Job.countDocuments(query);
+    res.json({ jobs, total, page: Number(page), pages: Math.ceil(total / Number(limit)) });
+  } catch (err) {
+    console.error('List jobs error:', err);
+    return res.status(500).json({ message: 'Failed to fetch jobs' });
+  }
+};
+
+// Get specific job (Employer)
+exports.getJob = async (req, res) => {
+  try {
+    const { jobId } = req.params;
+    const employerId = req.employer.id;
+
+    const job = await Job.findOne({ _id: jobId, employerId: employerId });
+    if (!job) {
+      return res.status(404).json({ 
+        message: 'Job not found or you do not have permission to view it' 
+      });
+    }
+
+    res.json({ job });
+  } catch (err) {
+    console.error('Get job error:', err);
+    return res.status(500).json({ message: 'Failed to fetch job' });
+  }
+};
+
+// Delete job (Employer)
+exports.deleteJob = async (req, res) => {
+  try {
+    const { jobId } = req.params;
+    const employerId = req.employer.id;
+
+    // Find the job and verify ownership
+    const job = await Job.findOne({ _id: jobId, employerId: employerId });
+    if (!job) {
+      return res.status(404).json({ 
+        message: 'Job not found or you do not have permission to delete it' 
+      });
+    }
+
+    // Delete the job
+    await Job.findByIdAndDelete(jobId);
+
+    // Also delete from Application collection
+    const Application = require('../models/Application');
+    await Application.deleteMany({ jobId: jobId });
+
+    // Update employer's job posting count
+    const employer = await Employer.findById(employerId);
+    if (employer) {
+      employer.jobPostingsUsed = Math.max(0, employer.jobPostingsUsed - 1);
+      employer.totalJobPosts = Math.max(0, employer.totalJobPosts - 1);
+      await employer.save();
+    }
+
+    res.json({ 
+      message: 'Job deleted successfully',
+      jobId: jobId
+    });
+  } catch (err) {
+    console.error('Delete job error:', err);
+    return res.status(500).json({ message: 'Failed to delete job' });
+  }
+};
+
+>>>>>>> da4180d (Initial commit)
 // Employer Login
 exports.loginEmployer = async (req, res) => {
   try {

@@ -154,6 +154,21 @@ const Navbar = () => {
                   Dashboard
                 </Link>
               )}
+<<<<<<< HEAD
+=======
+              {isLoggedIn && user?.userType === 'user' && (
+                <Link
+                  to="/my-applications"
+                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                    isActive('/my-applications') || isActive('/applications')
+                      ? 'text-blue-600 bg-blue-50' 
+                      : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
+                  }`}
+                >
+                  My Applications
+                </Link>
+              )}
+>>>>>>> da4180d (Initial commit)
               <Link
                 to="/about"
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
@@ -312,6 +327,24 @@ const Navbar = () => {
                         Profile
                       </div>
                     </Link>
+<<<<<<< HEAD
+=======
+                    {/* My Applications Link - Only for regular users */}
+                    {user?.userType === 'user' && (
+                      <Link
+                        to="/my-applications"
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+                        onClick={() => setIsProfileDropdownOpen(false)}
+                      >
+                        <div className="flex items-center">
+                          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                          My Applications
+                        </div>
+                      </Link>
+                    )}
+>>>>>>> da4180d (Initial commit)
                     <button
                       onClick={handleLogout}
                       className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200"
@@ -383,6 +416,22 @@ const Navbar = () => {
               Dashboard
             </Link>
           )}
+<<<<<<< HEAD
+=======
+          {isLoggedIn && user?.userType === 'user' && (
+            <Link
+              to="/my-applications"
+              className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
+                isActive('/my-applications') || isActive('/applications')
+                  ? 'text-blue-600 bg-blue-50' 
+                  : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
+              }`}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              My Applications
+            </Link>
+          )}
+>>>>>>> da4180d (Initial commit)
           <Link
             to="/about"
             className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
@@ -498,6 +547,18 @@ const Navbar = () => {
               >
                 Profile
               </Link>
+<<<<<<< HEAD
+=======
+              {user?.userType === 'user' && (
+                <Link
+                  to="/my-applications"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-200"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  My Applications
+                </Link>
+              )}
+>>>>>>> da4180d (Initial commit)
               <Link
                 to={user?.userType === 'employer' ? '/employer/dashboard' : '/dashboard'}
                 className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-200"

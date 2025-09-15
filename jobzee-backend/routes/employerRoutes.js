@@ -11,7 +11,15 @@ const {
   deactivateAccount,
   getAllEmployers,
   forgotPassword,
+<<<<<<< HEAD
   resetPassword
+=======
+  resetPassword,
+  createJob,
+  listMyJobs,
+  getJob,
+  deleteJob
+>>>>>>> da4180d (Initial commit)
 } = require('../controllers/employerController');
 
 const emailService = require('../services/emailService');
@@ -79,4 +87,13 @@ router.put('/deactivate', deactivateAccount);
 // SECURITY: This route is now moved to admin routes only
 // router.get('/all', getAllEmployers); // REMOVED: This is now admin-only in /api/admin/employers
 
+<<<<<<< HEAD
+=======
+// Jobs
+router.post('/jobs', requireVerification, createJob);
+router.get('/jobs', requireVerification, listMyJobs);
+router.get('/jobs/:jobId', requireVerification, getJob);
+router.delete('/jobs/:jobId', requireVerification, deleteJob);
+
+>>>>>>> da4180d (Initial commit)
 module.exports = router;

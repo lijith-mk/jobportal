@@ -13,6 +13,13 @@ const Dashboard = () => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [dashboardAssets, setDashboardAssets] = useState(null);
+<<<<<<< HEAD
+=======
+  const [userApplications, setUserApplications] = useState([]);
+  const [applicationsLoading, setApplicationsLoading] = useState(true);
+  const [savedJobsCount, setSavedJobsCount] = useState(0);
+  const [savedJobsLoading, setSavedJobsLoading] = useState(true);
+>>>>>>> da4180d (Initial commit)
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -29,6 +36,15 @@ const Dashboard = () => {
     // Load dashboard assets
     loadDashboardAssets();
     
+<<<<<<< HEAD
+=======
+    // Load user applications
+    loadUserApplications();
+    
+    // Load saved jobs count
+    loadSavedJobsCount();
+    
+>>>>>>> da4180d (Initial commit)
     // Update time every minute
     const timer = setInterval(() => setCurrentTime(new Date()), 60000);
     return () => clearInterval(timer);
@@ -197,6 +213,76 @@ const Dashboard = () => {
     }
   };
 
+<<<<<<< HEAD
+=======
+  // Function to load user applications
+  const loadUserApplications = async () => {
+    try {
+      setApplicationsLoading(true);
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      
+      const res = await fetch(`http://localhost:5000/api/applications/my-applications`, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+      
+      if (res.ok) {
+        const data = await res.json();
+        if (data.applications) {
+          // Format the applications to match the expected structure
+          const formattedApplications = data.applications.slice(0, 4).map(app => ({
+            _id: app.jobId?._id || app._id,
+            title: app.jobTitle || app.jobId?.title,
+            company: app.companyName || app.jobId?.company,
+            location: app.jobId?.location || 'Location not specified',
+            jobType: app.jobId?.jobType || 'Full-time',
+            appliedAt: app.appliedAt,
+            status: app.applicationStatus,
+            employer: {
+              companyName: app.companyName,
+              companyLogo: null // Will be populated from job data if needed
+            }
+          }));
+          setUserApplications(formattedApplications);
+        }
+      }
+    } catch (error) {
+      console.error("Failed to load user applications:", error);
+    } finally {
+      setApplicationsLoading(false);
+    }
+  };
+
+  // Function to load saved jobs count
+  const loadSavedJobsCount = async () => {
+    try {
+      setSavedJobsLoading(true);
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      
+      const res = await fetch(`http://localhost:5000/api/jobs/saved/my-jobs?limit=1`, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+      
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success) {
+          setSavedJobsCount(data.pagination?.total || 0);
+        }
+      }
+    } catch (error) {
+      console.error("Failed to load saved jobs count:", error);
+    } finally {
+      setSavedJobsLoading(false);
+    }
+  };
+
+
+>>>>>>> da4180d (Initial commit)
   const handleLogout = () => {
     setShowLogoutConfirm(true);
   };
@@ -259,9 +345,15 @@ const Dashboard = () => {
       { 
         id: "savedJobs",
         title: "Saved Jobs", 
+<<<<<<< HEAD
         value: "32", 
         change: "+8%", 
         changeType: "positive",
+=======
+        value: savedJobsLoading ? "..." : savedJobsCount.toString(), 
+        change: savedJobsCount > 0 ? "+" + Math.min(100, Math.floor(savedJobsCount * 0.1)) + "%" : "0%", 
+        changeType: savedJobsCount > 0 ? "positive" : "neutral",
+>>>>>>> da4180d (Initial commit)
         description: "Jobs saved for future reference",
         icon: "❤️",
         iconPath: "M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z",
@@ -307,6 +399,7 @@ const Dashboard = () => {
     }
   ];
 
+<<<<<<< HEAD
   const recentJobs = [
     {
       id: 1,
@@ -361,6 +454,31 @@ const Dashboard = () => {
       remote: true
     },
   ];
+=======
+  // Helper function to format salary
+  const formatSalary = (salary) => {
+    if (!salary || (!salary.min && !salary.max)) return 'Salary not specified';
+    if (salary.min && salary.max) {
+      return `${salary.currency || 'USD'} ${salary.min.toLocaleString()} - ${salary.max.toLocaleString()}`;
+    }
+    if (salary.min) return `${salary.currency || 'USD'} ${salary.min.toLocaleString()}+`;
+    if (salary.max) return `Up to ${salary.currency || 'USD'} ${salary.max.toLocaleString()}`;
+    return 'Salary not specified';
+  };
+
+  // Helper function to format date
+  const formatApplicationDate = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now - date);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 1) return '1 day ago';
+    if (diffDays < 7) return `${diffDays} days ago`;
+    if (diffDays < 30) return `${Math.ceil(diffDays / 7)} weeks ago`;
+    return `${Math.ceil(diffDays / 30)} months ago`;
+  };
+>>>>>>> da4180d (Initial commit)
 
   if (!user) return null;
 
@@ -550,12 +668,15 @@ const Dashboard = () => {
                       </svg>
                       <span>Search Jobs</span>
                     </Link>
+<<<<<<< HEAD
                     <button className="bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 px-8 py-3 rounded-lg font-semibold hover:bg-white/20 transition-all duration-200 flex items-center space-x-2">
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                       </svg>
                       <span>Upload Resume</span>
                     </button>
+=======
+>>>>>>> da4180d (Initial commit)
                   </div>
                 </div>
               </div>
@@ -692,6 +813,7 @@ const Dashboard = () => {
                 </svg>
               </Link>
               
+<<<<<<< HEAD
               <button className="group flex items-center justify-between w-full p-4 bg-gradient-to-r from-purple-50 to-violet-50 rounded-xl hover:from-purple-100 hover:to-violet-100 transition-all duration-300 border border-purple-100">
                 <div className="flex items-center space-x-3">
                   <div className="p-2 bg-purple-500 rounded-lg group-hover:bg-purple-600 transition-colors">
@@ -705,6 +827,8 @@ const Dashboard = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </button>
+=======
+>>>>>>> da4180d (Initial commit)
             </div>
           </div>
 
@@ -841,6 +965,7 @@ const Dashboard = () => {
           </div>
           
           <div className="divide-y divide-gray-100">
+<<<<<<< HEAD
             {recentJobs.map((job, index) => (
               <div key={job.id} className={`p-6 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-300 group cursor-pointer`} style={{ animationDelay: `${1000 + index * 200}ms` }}>
                 <div className="flex items-start justify-between">
@@ -929,10 +1054,107 @@ const Dashboard = () => {
                           <button className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg">View Details</button>
                           <button className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50">Save Job</button>
                           <button className="w-full px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 rounded-b-lg">Remove</button>
+=======
+            {applicationsLoading ? (
+              <div className="p-6 text-center">
+                <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <svg className="w-4 h-4 text-gray-400 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                </div>
+                <p className="text-gray-600 text-sm">Loading your applications...</p>
+              </div>
+            ) : userApplications.length === 0 ? (
+              <div className="p-6 text-center">
+                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">No applications yet</h3>
+                <p className="text-gray-600 mb-4">Start applying to jobs to see them here</p>
+                <Link 
+                  to="/jobs"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                >
+                  Browse Jobs
+                </Link>
+              </div>
+            ) : (
+              userApplications.map((job, index) => (
+                <div key={job._id} className={`p-6 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-300 group cursor-pointer`} style={{ animationDelay: `${1000 + index * 200}ms` }}>
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-start space-x-4">
+                        <div className="relative">
+                          <img 
+                            src={job.employer?.companyLogo || `https://ui-avatars.com/api/?name=${encodeURIComponent(job.company)}&background=3b82f6&color=fff&size=64`}
+                            alt={job.company}
+                            className="w-14 h-14 rounded-xl shadow-md group-hover:shadow-lg transition-shadow duration-300"
+                            onError={(e) => {
+                              e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(job.company)}&background=3b82f6&color=fff&size=64`;
+                            }}
+                          />
+                          {job.remote === 'remote' && (
+                            <div className="absolute -top-1 -right-1 bg-green-400 text-white text-xs px-2 py-0.5 rounded-full font-medium">
+                              Remote
+                            </div>
+                          )}
+                        </div>
+                        
+                        <div className="flex-1">
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <h4 className="text-lg font-semibold text-gray-900 group-hover:text-blue-700 transition-colors">{job.title}</h4>
+                              <p className="text-gray-600 font-medium">{job.company}</p>
+                              
+                              <div className="flex flex-wrap items-center gap-4 mt-3 text-sm text-gray-500">
+                                <span className="flex items-center space-x-1">
+                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                  </svg>
+                                  <span>{job.location}</span>
+                                </span>
+                                
+                                <span className="flex items-center space-x-1">
+                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                                  </svg>
+                                  <span className="font-semibold text-gray-700">{formatSalary(job.salary)}</span>
+                                </span>
+                                
+                                <span className="flex items-center space-x-1">
+                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                  </svg>
+                                  <span>{job.jobType.charAt(0).toUpperCase() + job.jobType.slice(1)}</span>
+                                </span>
+                              </div>
+                              
+                              {/* Skills */}
+                              {job.skills && job.skills.length > 0 && (
+                                <div className="flex flex-wrap gap-2 mt-3">
+                                  {job.skills.slice(0, 4).map((skill, skillIndex) => (
+                                    <span key={skillIndex} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-md">
+                                      {skill}
+                                    </span>
+                                  ))}
+                                  {job.skills.length > 4 && (
+                                    <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-md">
+                                      +{job.skills.length - 4} more
+                                    </span>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+>>>>>>> da4180d (Initial commit)
                         </div>
                       </div>
                     </div>
                     
+<<<<<<< HEAD
                     <span className="text-sm text-gray-500 font-medium">{job.date}</span>
                   </div>
                 </div>
@@ -960,6 +1182,62 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
+=======
+                    <div className="flex flex-col items-end space-y-3">
+                      <div className="flex items-center space-x-3">
+                        <span className={`px-3 py-1 rounded-full text-sm font-semibold border-2 ${
+                          job.status === "applied" ? "bg-blue-50 text-blue-700 border-blue-200" :
+                          job.status === "reviewed" ? "bg-yellow-50 text-yellow-700 border-yellow-200" :
+                          job.status === "shortlisted" ? "bg-green-50 text-green-700 border-green-200" :
+                          job.status === "rejected" ? "bg-red-50 text-red-700 border-red-200" :
+                          job.status === "hired" ? "bg-green-50 text-green-700 border-green-200" :
+                          "bg-gray-50 text-gray-700 border-gray-200"
+                        }`}>
+                          {job.status === "shortlisted" ? "🎯 Shortlisted" : 
+                           job.status === "reviewed" ? "👀 Reviewed" :
+                           job.status === "rejected" ? "❌ Rejected" :
+                           job.status === "hired" ? "🎉 Hired" :
+                           "✉️ Applied"}
+                        </span>
+                        
+                        <div className="group/menu relative">
+                          <button className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                            <svg className="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                              <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                            </svg>
+                          </button>
+                          <div className="absolute right-0 mt-1 w-32 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover/menu:opacity-100 group-hover/menu:visible transition-all duration-200 z-10">
+                            <button className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg">View Details</button>
+                            <button className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50">View Job</button>
+                            <button className="w-full px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 rounded-b-lg">Withdraw</button>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <span className="text-sm text-gray-500 font-medium">{formatApplicationDate(job.appliedAt)}</span>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+          
+          {userApplications.length > 0 && (
+            <div className="bg-gray-50 px-6 py-4 border-t border-gray-100">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-gray-600">
+                  Showing {userApplications.length} recent applications
+                </p>
+                <Link 
+                  to="/my-applications"
+                  className="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors"
+                >
+                  View All Applications →
+                </Link>
+              </div>
+            </div>
+          )}
+>>>>>>> da4180d (Initial commit)
         </div>
       </div>
 

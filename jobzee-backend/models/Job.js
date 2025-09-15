@@ -108,6 +108,19 @@ const jobSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+<<<<<<< HEAD
+=======
+  // Reporting / Flagging
+  reports: [{
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    reason: { type: String, enum: ['spam', 'scam', 'duplicate', 'misleading', 'other'], default: 'other' },
+    details: { type: String },
+    createdAt: { type: Date, default: Date.now },
+    status: { type: String, enum: ['open', 'reviewed', 'dismissed', 'action_taken'], default: 'open' }
+  }],
+  reportCount: { type: Number, default: 0 },
+  isFlagged: { type: Boolean, default: false },
+>>>>>>> da4180d (Initial commit)
   createdAt: {
     type: Date,
     default: Date.now
@@ -132,4 +145,10 @@ jobSchema.index({
   skills: 'text'
 });
 
+<<<<<<< HEAD
+=======
+// Indexes to aid moderation/reporting queries
+jobSchema.index({ status: 1, isFlagged: 1, reportCount: -1 });
+
+>>>>>>> da4180d (Initial commit)
 module.exports = mongoose.model('Job', jobSchema);

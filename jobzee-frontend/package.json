@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+<<<<<<< HEAD
+=======
+    "@mapbox/mapbox-gl-geocoder": "^5.1.2",
+>>>>>>> da4180d (Initial commit)
     "@tailwindcss/forms": "^0.5.10",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.6.4",
@@ -11,6 +15,10 @@
     "classnames": "^2.5.1",
     "cloudinary": "^2.7.0",
     "jwt-decode": "^4.0.0",
+<<<<<<< HEAD
+=======
+    "mapbox-gl": "^2.15.0",
+>>>>>>> da4180d (Initial commit)
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-phone-input-2": "^2.15.1",

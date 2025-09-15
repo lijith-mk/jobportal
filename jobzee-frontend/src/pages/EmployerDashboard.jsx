@@ -11,6 +11,12 @@ const EmployerDashboard = () => {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showNotifications, setShowNotifications] = useState(false);
+<<<<<<< HEAD
+=======
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [jobCount, setJobCount] = useState(0);
+  const [recentJobs, setRecentJobs] = useState([]);
+>>>>>>> da4180d (Initial commit)
 
   useEffect(() => {
     const employerData = localStorage.getItem("employer");
@@ -23,6 +29,11 @@ const EmployerDashboard = () => {
 
     setEmployer(JSON.parse(employerData));
     fetchDashboardStats(token);
+<<<<<<< HEAD
+=======
+    fetchJobCount(token);
+    fetchRecentJobs(token);
+>>>>>>> da4180d (Initial commit)
     setAnimate(true);
   }, [navigate]);
 
@@ -47,6 +58,56 @@ const EmployerDashboard = () => {
     }
   };
 
+<<<<<<< HEAD
+=======
+  const fetchJobCount = async (token) => {
+    try {
+      const res = await fetch("http://localhost:5000/api/employers/jobs", {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setJobCount(data.total || 0);
+      }
+    } catch (err) {
+      console.error("Error fetching job count:", err);
+    }
+  };
+
+  const fetchRecentJobs = async (token) => {
+    try {
+      const res = await fetch("http://localhost:5000/api/employers/jobs?limit=3", {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setRecentJobs(data.jobs || []);
+      }
+    } catch (err) {
+      console.error("Error fetching recent jobs:", err);
+    }
+  };
+
+  const canPostMoreJobs = () => {
+    if (!employer) return false;
+    return employer.subscriptionPlan === 'free' ? jobCount < 1 : true;
+  };
+
+  const handlePostJobClick = () => {
+    if (!canPostMoreJobs()) {
+      setShowUpgradeModal(true);
+    } else {
+      navigate('/employer/post-job');
+    }
+  };
+
+>>>>>>> da4180d (Initial commit)
   const handleLogout = () => {
     setShowLogoutConfirm(true);
   };
@@ -361,15 +422,24 @@ const EmployerDashboard = () => {
                     Post jobs, review applications, and connect with top talent. Manage your entire recruitment process in one place.
                   </p>
                   <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
+<<<<<<< HEAD
                     <Link
                       to="/employer/post-job"
+=======
+                    <button
+                      onClick={handlePostJobClick}
+>>>>>>> da4180d (Initial commit)
                       className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center space-x-2"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                       </svg>
                       <span>Post New Job</span>
+<<<<<<< HEAD
                     </Link>
+=======
+                    </button>
+>>>>>>> da4180d (Initial commit)
                     <Link
                       to="/employer/candidates"
                       className="bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 px-8 py-3 rounded-lg font-semibold hover:bg-white/20 transition-all duration-200 flex items-center space-x-2"
@@ -450,12 +520,27 @@ const EmployerDashboard = () => {
               Quick Actions
             </h3>
             <div className="space-y-3">
+<<<<<<< HEAD
               <button className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 px-4 rounded-lg transition duration-200 hover-lift font-medium">
                 📝 Post New Job
               </button>
               <button className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-3 px-4 rounded-lg transition duration-200 hover-lift font-medium">
                 👥 View Applications
               </button>
+=======
+              <button 
+                onClick={handlePostJobClick}
+                className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 px-4 rounded-lg transition duration-200 hover-lift font-medium"
+              >
+                📝 Post New Job
+              </button>
+              <Link
+                to="/employer/my-jobs"
+                className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-3 px-4 rounded-lg transition duration-200 hover-lift font-medium block text-center"
+              >
+                👥 My Jobs
+              </Link>
+>>>>>>> da4180d (Initial commit)
               <Link
                 to="/employer/profile"
                 className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white py-3 px-4 rounded-lg transition duration-200 hover-lift block text-center font-medium"
@@ -541,6 +626,7 @@ const EmployerDashboard = () => {
             </h3>
           </div>
           <div className="p-6">
+<<<<<<< HEAD
             {stats.totalJobPosts > 0 ? (
               <div className="text-center py-8">
                 <div className="text-4xl mb-4">📋</div>
@@ -549,13 +635,80 @@ const EmployerDashboard = () => {
                 <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 hover-lift">
                   Create First Job Post
                 </button>
+=======
+            {recentJobs.length > 0 ? (
+              <div className="space-y-4">
+                {recentJobs.map((job, index) => (
+                  <div key={job._id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <h4 className="text-lg font-semibold text-gray-900 mb-1">{job.title}</h4>
+                        <p className="text-gray-600 mb-2">{job.location}</p>
+                        <div className="flex items-center space-x-4 text-sm text-gray-500">
+                          <span className="flex items-center space-x-1">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>{job.jobType}</span>
+                          </span>
+                          <span className="flex items-center space-x-1">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>{job.experienceLevel}</span>
+                          </span>
+                          <span className="flex items-center space-x-1">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                            </svg>
+                            <span>{job.salary?.min && job.salary?.max ? `$${job.salary.min} - $${job.salary.max}` : 'Salary not specified'}</span>
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-end space-y-2">
+                        <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                          job.status === 'active' ? 'bg-green-100 text-green-800' :
+                          job.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                          job.status === 'approved' ? 'bg-blue-100 text-blue-800' :
+                          job.status === 'rejected' ? 'bg-red-100 text-red-800' :
+                          'bg-gray-100 text-gray-800'
+                        }`}>
+                          {job.status === 'active' ? 'Live' :
+                           job.status === 'pending' ? 'Pending' :
+                           job.status === 'approved' ? 'Approved' :
+                           job.status === 'rejected' ? 'Rejected' :
+                           job.status}
+                        </span>
+                        <span className="text-xs text-gray-500">
+                          Posted {new Date(job.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                <div className="text-center pt-4">
+                  <Link 
+                    to="/employer/my-jobs"
+                    className="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors"
+                  >
+                    View All Jobs →
+                  </Link>
+                </div>
+>>>>>>> da4180d (Initial commit)
               </div>
             ) : (
               <div className="text-center py-8">
                 <div className="text-4xl mb-4">🎯</div>
                 <h4 className="text-lg font-semibold text-gray-900 mb-2">Ready to hire?</h4>
                 <p className="text-gray-600 mb-4">Post your first job and start receiving applications from qualified candidates.</p>
+<<<<<<< HEAD
                 <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 hover-lift">
+=======
+                <button 
+                  onClick={handlePostJobClick}
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 hover-lift"
+                >
+>>>>>>> da4180d (Initial commit)
                   Post Your First Job
                 </button>
               </div>
@@ -594,6 +747,48 @@ const EmployerDashboard = () => {
           </div>
         </div>
       )}
+<<<<<<< HEAD
+=======
+
+      {/* Upgrade Plan Modal */}
+      {showUpgradeModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-8 max-w-md w-full mx-4 shadow-2xl">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                </svg>
+              </div>
+              
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Free Plan Limit Reached</h3>
+              <p className="text-gray-600 mb-6">
+                Your free plan allows only 1 job posting. To post more jobs and unlock additional features, please upgrade your plan.
+              </p>
+              
+              <div className="space-y-3">
+                <button
+                  onClick={() => {
+                    setShowUpgradeModal(false);
+                    toast.info('Please contact support to upgrade your plan');
+                  }}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                >
+                  Upgrade Plan
+                </button>
+                
+                <button
+                  onClick={() => setShowUpgradeModal(false)}
+                  className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-medium transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+>>>>>>> da4180d (Initial commit)
     </div>
   );
 };

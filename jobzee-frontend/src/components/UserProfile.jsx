@@ -12,6 +12,10 @@ const UserProfile = () => {
   const fileInputRef = useRef(null);
   const resumeInputRef = useRef(null);
   const [animate, setAnimate] = useState(false);
+<<<<<<< HEAD
+=======
+  const [activeSection, setActiveSection] = useState('basic');
+>>>>>>> da4180d (Initial commit)
 
   const [formData, setFormData] = useState({
     name: '',
@@ -133,6 +137,44 @@ const UserProfile = () => {
     fetchUserProfile();
   }, []);
 
+<<<<<<< HEAD
+=======
+  // Observe sections to highlight active header tab while scrolling
+  useEffect(() => {
+    const sectionIds = ['basic', 'bio', 'skills', 'prefs'];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      {
+        root: null,
+        // When top 30% of a section is visible, consider it active
+        rootMargin: '0px 0px -70% 0px',
+        threshold: 0.1
+      }
+    );
+
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const handleTabClick = (id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setActiveSection(id);
+    }
+  };
+
+>>>>>>> da4180d (Initial commit)
   const fetchUserProfile = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -492,6 +534,7 @@ const UserProfile = () => {
   }
 
   return (
+<<<<<<< HEAD
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 py-8 px-4">
       {/* Header */}
       <div className={`max-w-6xl mx-auto mb-8 transform transition-all duration-700 ${animate ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
@@ -501,6 +544,40 @@ const UserProfile = () => {
             <div className="absolute bottom-4 left-6 text-white">
               <h1 className="text-2xl font-bold">Professional Profile</h1>
               <p className="text-blue-100">Showcase your skills and experience</p>
+=======
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-emerald-50 py-10 px-4">
+      {/* Header */}
+      <div className={`max-w-6xl mx-auto mb-8 transform transition-all duration-700 ${animate ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}>
+        <div className="rounded-xl shadow-sm ring-1 ring-black/5 bg-white/80 backdrop-blur px-4 py-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-8 rounded-full bg-gradient-to-b from-indigo-500 to-emerald-500"></div>
+              <div>
+                <h1 className="text-lg sm:text-xl font-bold tracking-tight text-gray-900">{formData.name || 'My Profile'}</h1>
+                <p className="text-xs text-gray-500">{formData.title || 'Manage your information and preferences'}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 text-xs">
+              {[
+                { id: 'basic', label: 'Basic' },
+                { id: 'bio', label: 'Bio' },
+                { id: 'skills', label: 'Skills' },
+                { id: 'prefs', label: 'Preferences' }
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => handleTabClick(tab.id)}
+                  className={`px-3 py-1 rounded-full ring-1 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 ${
+                    activeSection === tab.id
+                      ? 'bg-indigo-600 text-white ring-indigo-600 shadow-sm'
+                      : 'ring-gray-200 text-gray-700 hover:ring-indigo-200 hover:text-indigo-700 bg-white/60'
+                  }`}
+                  aria-current={activeSection === tab.id ? 'page' : undefined}
+                >
+                  {tab.label}
+                </button>
+              ))}
+>>>>>>> da4180d (Initial commit)
             </div>
           </div>
         </div>
@@ -509,12 +586,21 @@ const UserProfile = () => {
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Profile Sidebar */}
         <div className={`lg:col-span-1 transform transition-all duration-700 delay-200 ${animate ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
+<<<<<<< HEAD
           <div className="bg-white rounded-2xl shadow-xl p-8 sticky top-8">
             {/* Profile Picture */}
             <div className="text-center mb-8">
               <div className="relative inline-block">
                 <div className="w-32 h-32 rounded-full bg-gradient-to-r from-blue-500 to-green-500 p-1 shadow-lg">
                   <div className="w-full h-full rounded-full bg-white flex items-center justify-center overflow-hidden">
+=======
+          <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl p-8 sticky top-8 ring-1 ring-black/5">
+            {/* Profile Picture */}
+            <div className="text-center mb-8">
+              <div className="relative inline-block">
+                <div className="w-32 h-32 rounded-full bg-gradient-to-r from-indigo-500 to-emerald-500 p-[3px] shadow-xl">
+                  <div className="w-full h-full rounded-full bg-white/90 backdrop-blur flex items-center justify-center overflow-hidden">
+>>>>>>> da4180d (Initial commit)
                     {formData.profilePicture ? (
                       <img
                         src={formData.profilePicture}
@@ -532,7 +618,11 @@ const UserProfile = () => {
                   <button
                     onClick={() => fileInputRef.current?.click()}
                     disabled={uploadingImage}
+<<<<<<< HEAD
                     className="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full shadow-lg hover:bg-blue-700 transition-colors duration-200 disabled:opacity-50"
+=======
+                    className="absolute bottom-0 right-0 bg-indigo-600 text-white p-2 rounded-full shadow-lg hover:bg-indigo-700 transition-all duration-200 disabled:opacity-50"
+>>>>>>> da4180d (Initial commit)
                   >
                     {uploadingImage ? (
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -551,7 +641,11 @@ const UserProfile = () => {
                   className="hidden"
                 />
               </div>
+<<<<<<< HEAD
               <h2 className="text-2xl font-bold text-gray-900 mt-4">{formData.name || 'Your Name'}</h2>
+=======
+              <h2 className="text-2xl font-extrabold text-gray-900 mt-4 tracking-tight">{formData.name || 'Your Name'}</h2>
+>>>>>>> da4180d (Initial commit)
               <p className="text-gray-600">{formData.title || 'Professional Title'}</p>
               <div className="flex items-center justify-center mt-2 text-sm text-gray-500">
                 <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -564,7 +658,11 @@ const UserProfile = () => {
 
             {/* Quick Stats */}
             <div className="space-y-4 mb-8">
+<<<<<<< HEAD
               <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-xl p-4">
+=======
+              <div className="bg-gradient-to-r from-indigo-50 to-emerald-50 rounded-xl p-4 ring-1 ring-black/5">
+>>>>>>> da4180d (Initial commit)
                 <div className="flex items-center">
                   <div className="bg-blue-500 text-white p-2 rounded-lg mr-3">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -578,7 +676,11 @@ const UserProfile = () => {
                 </div>
               </div>
               
+<<<<<<< HEAD
               <div className="bg-gradient-to-r from-green-50 to-purple-50 rounded-xl p-4">
+=======
+              <div className="bg-gradient-to-r from-emerald-50 to-purple-50 rounded-xl p-4 ring-1 ring-black/5">
+>>>>>>> da4180d (Initial commit)
                 <div className="flex items-center">
                   <div className="bg-green-500 text-white p-2 rounded-lg mr-3">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -592,7 +694,11 @@ const UserProfile = () => {
                 </div>
               </div>
               
+<<<<<<< HEAD
               <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4">
+=======
+              <div className="bg-gradient-to-r from-violet-50 to-pink-50 rounded-xl p-4 ring-1 ring-black/5">
+>>>>>>> da4180d (Initial commit)
                 <div className="flex items-center">
                   <div className="bg-purple-500 text-white p-2 rounded-lg mr-3">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -609,10 +715,17 @@ const UserProfile = () => {
             
             {/* Resume Upload */}
             <div className="mb-6">
+<<<<<<< HEAD
               <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl p-4">
                 <h3 className="text-sm font-semibold text-gray-700 mb-3">Resume/CV</h3>
                 {formData.resume ? (
                   <div className="flex items-center justify-between bg-white rounded-lg p-3">
+=======
+              <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl p-4 ring-1 ring-black/5">
+                <h3 className="text-sm font-semibold text-gray-700 mb-3">Resume/CV</h3>
+                {formData.resume ? (
+                  <div className="flex items-center justify-between bg-white/90 backdrop-blur rounded-lg p-3 ring-1 ring-black/5">
+>>>>>>> da4180d (Initial commit)
                     <div className="flex items-center">
                       <svg className="w-8 h-8 text-red-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -652,7 +765,11 @@ const UserProfile = () => {
                       <button
                         onClick={() => resumeInputRef.current?.click()}
                         disabled={uploadingResume}
+<<<<<<< HEAD
                         className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50"
+=======
+                        className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-all disabled:opacity-50 shadow"
+>>>>>>> da4180d (Initial commit)
                       >
                         {uploadingResume ? 'Uploading...' : 'Upload Resume'}
                       </button>
@@ -675,7 +792,11 @@ const UserProfile = () => {
               {!isEditing ? (
                 <button
                   onClick={() => setIsEditing(true)}
+<<<<<<< HEAD
                   className="w-full bg-gradient-to-r from-blue-600 to-green-500 text-white py-3 px-4 rounded-xl font-medium hover:from-blue-700 hover:to-green-600 transition-all duration-200 transform hover:scale-105 shadow-lg"
+=======
+                  className="w-full bg-gradient-to-r from-indigo-600 to-emerald-500 text-white py-3 px-4 rounded-xl font-semibold hover:from-indigo-700 hover:to-emerald-600 transition-all duration-200 transform hover:scale-[1.02] shadow-xl"
+>>>>>>> da4180d (Initial commit)
                 >
                   Edit Profile
                 </button>
@@ -684,7 +805,11 @@ const UserProfile = () => {
                   <button
                     onClick={handleSave}
                     disabled={saving}
+<<<<<<< HEAD
                     className="w-full bg-gradient-to-r from-green-600 to-blue-600 text-white py-3 px-4 rounded-xl font-medium hover:from-green-700 hover:to-blue-700 transition-all duration-200 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:transform-none"
+=======
+                    className="w-full bg-gradient-to-r from-emerald-600 to-indigo-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-emerald-700 hover:to-indigo-700 transition-all duration-200 transform hover:scale-[1.02] shadow-xl disabled:opacity-50 disabled:transform-none"
+>>>>>>> da4180d (Initial commit)
                   >
                     {saving ? 'Saving...' : 'Save Changes'}
                   </button>
@@ -693,7 +818,11 @@ const UserProfile = () => {
                       setIsEditing(false);
                       fetchUserProfile();
                     }}
+<<<<<<< HEAD
                     className="w-full bg-gray-500 text-white py-3 px-4 rounded-xl font-medium hover:bg-gray-600 transition-all duration-200"
+=======
+                    className="w-full bg-gray-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-gray-700 transition-all duration-200"
+>>>>>>> da4180d (Initial commit)
                   >
                     Cancel
                   </button>
@@ -706,9 +835,15 @@ const UserProfile = () => {
         {/* Main Content */}
         <div className={`lg:col-span-2 space-y-8 transform transition-all duration-700 delay-400 ${animate ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}>
           {/* Basic Information */}
+<<<<<<< HEAD
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
             <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-6">
               <h3 className="text-xl font-bold text-white flex items-center">
+=======
+          <div id="basic" className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl overflow-hidden ring-1 ring-black/5">
+            <div className="bg-gradient-to-r from-indigo-600 to-violet-600 px-8 py-6">
+              <h3 className="text-xl font-extrabold text-white flex items-center tracking-wide">
+>>>>>>> da4180d (Initial commit)
                 <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -725,11 +860,19 @@ const UserProfile = () => {
                       type="text"
                       value={formData.name}
                       onChange={(e) => handleInputChange('name', e.target.value)}
+<<<<<<< HEAD
                       className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-blue-500 transition-colors duration-200"
                       placeholder="Enter your full name"
                     />
                   ) : (
                     <p className="text-gray-900 bg-gray-50 rounded-xl px-4 py-3">{formData.name || 'Not provided'}</p>
+=======
+                      className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-transparent focus:ring-4 focus:ring-indigo-200 transition-all duration-200 bg-white/70"
+                      placeholder="Enter your full name"
+                    />
+                  ) : (
+                    <p className="text-gray-900 bg-gray-50 rounded-xl px-4 py-3 ring-1 ring-black/5">{formData.name || 'Not provided'}</p>
+>>>>>>> da4180d (Initial commit)
                   )}
                 </div>
 
@@ -740,11 +883,19 @@ const UserProfile = () => {
                       type="text"
                       value={formData.title}
                       onChange={(e) => handleInputChange('title', e.target.value)}
+<<<<<<< HEAD
                       className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-blue-500 transition-colors duration-200"
                       placeholder="e.g., Senior Software Engineer"
                     />
                   ) : (
                     <p className="text-gray-900 bg-gray-50 rounded-xl px-4 py-3">{formData.title || 'Not provided'}</p>
+=======
+                      className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-transparent focus:ring-4 focus:ring-indigo-200 transition-all duration-200 bg-white/70"
+                      placeholder="e.g., Senior Software Engineer"
+                    />
+                  ) : (
+                    <p className="text-gray-900 bg-gray-50 rounded-xl px-4 py-3 ring-1 ring-black/5">{formData.title || 'Not provided'}</p>
+>>>>>>> da4180d (Initial commit)
                   )}
                 </div>
 
@@ -763,10 +914,17 @@ const UserProfile = () => {
                         onChange={(e) => handlePhoneChange(e.target.value)}
                         onFocus={handlePhoneFocus}
                         onBlur={handlePhoneBlur}
+<<<<<<< HEAD
                         className={`w-full border-2 rounded-xl px-4 py-3 text-gray-800 focus:outline-none transition-colors duration-200 ${
                           validationErrors.phone && validationErrors.phone.length > 0 && fieldTouched.phone
                             ? 'border-red-500 focus:border-red-600'
                             : 'border-gray-200 focus:border-blue-500'
+=======
+                        className={`w-full border rounded-xl px-4 py-3 text-gray-800 focus:outline-none transition-all duration-200 bg-white/70 ${
+                          validationErrors.phone && validationErrors.phone.length > 0 && fieldTouched.phone
+                            ? 'border-red-400 focus:border-transparent focus:ring-4 focus:ring-red-200'
+                            : 'border-gray-200 focus:border-transparent focus:ring-4 focus:ring-indigo-200'
+>>>>>>> da4180d (Initial commit)
                         }`}
                         placeholder="Enter phone number (e.g., +91 9876543210)"
                       />
@@ -782,7 +940,11 @@ const UserProfile = () => {
                       </div>
                     </div>
                   ) : (
+<<<<<<< HEAD
                     <p className="text-gray-900 bg-gray-50 rounded-xl px-4 py-3">{formData.phone || 'Not provided'}</p>
+=======
+                    <p className="text-gray-900 bg-gray-50 rounded-xl px-4 py-3 ring-1 ring-black/5">{formData.phone || 'Not provided'}</p>
+>>>>>>> da4180d (Initial commit)
                   )}
                 </div>
 
@@ -792,7 +954,11 @@ const UserProfile = () => {
                     <select
                       value={formData.country}
                       onChange={(e) => handleInputChange('country', e.target.value)}
+<<<<<<< HEAD
                       className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-blue-500 transition-colors duration-200"
+=======
+                      className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-transparent focus:ring-4 focus:ring-indigo-200 transition-all duration-200 bg-white/70"
+>>>>>>> da4180d (Initial commit)
                     >
                       <option value="">Select Country</option>
                       <option value="USA">United States</option>
@@ -806,7 +972,11 @@ const UserProfile = () => {
                       <option value="Other">Other</option>
                     </select>
                   ) : (
+<<<<<<< HEAD
                     <p className="text-gray-900 bg-gray-50 rounded-xl px-4 py-3">{formData.country || 'Not provided'}</p>
+=======
+                    <p className="text-gray-900 bg-gray-50 rounded-xl px-4 py-3 ring-1 ring-black/5">{formData.country || 'Not provided'}</p>
+>>>>>>> da4180d (Initial commit)
                   )}
                 </div>
 
@@ -817,11 +987,19 @@ const UserProfile = () => {
                       type="text"
                       value={formData.location}
                       onChange={(e) => handleInputChange('location', e.target.value)}
+<<<<<<< HEAD
                       className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-blue-500 transition-colors duration-200"
                       placeholder="City, Country"
                     />
                   ) : (
                     <p className="text-gray-900 bg-gray-50 rounded-xl px-4 py-3">{formData.location || 'Not provided'}</p>
+=======
+                      className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-transparent focus:ring-4 focus:ring-indigo-200 transition-all duration-200 bg-white/70"
+                      placeholder="City, Country"
+                    />
+                  ) : (
+                    <p className="text-gray-900 bg-gray-50 rounded-xl px-4 py-3 ring-1 ring-black/5">{formData.location || 'Not provided'}</p>
+>>>>>>> da4180d (Initial commit)
                   )}
                 </div>
 
@@ -831,7 +1009,11 @@ const UserProfile = () => {
                     <select
                       value={formData.experience}
                       onChange={(e) => handleInputChange('experience', e.target.value)}
+<<<<<<< HEAD
                       className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-blue-500 transition-colors duration-200"
+=======
+                      className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-transparent focus:ring-4 focus:ring-indigo-200 transition-all duration-200 bg-white/70"
+>>>>>>> da4180d (Initial commit)
                     >
                       <option value="">Select Experience Level</option>
                       {experienceLevels.map((level) => (
@@ -839,7 +1021,11 @@ const UserProfile = () => {
                       ))}
                     </select>
                   ) : (
+<<<<<<< HEAD
                     <p className="text-gray-900 bg-gray-50 rounded-xl px-4 py-3">{formData.experience || 'Not provided'}</p>
+=======
+                    <p className="text-gray-900 bg-gray-50 rounded-xl px-4 py-3 ring-1 ring-black/5">{formData.experience || 'Not provided'}</p>
+>>>>>>> da4180d (Initial commit)
                   )}
                 </div>
               </div>
@@ -847,9 +1033,15 @@ const UserProfile = () => {
           </div>
 
           {/* Bio */}
+<<<<<<< HEAD
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
             <div className="bg-gradient-to-r from-green-600 to-blue-600 px-8 py-6">
               <h3 className="text-xl font-bold text-white flex items-center">
+=======
+          <div id="bio" className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl overflow-hidden ring-1 ring-black/5">
+            <div className="bg-gradient-to-r from-emerald-600 to-indigo-600 px-8 py-6">
+              <h3 className="text-xl font-extrabold text-white flex items-center tracking-wide">
+>>>>>>> da4180d (Initial commit)
                 <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
@@ -864,11 +1056,19 @@ const UserProfile = () => {
                   value={formData.bio}
                   onChange={(e) => handleInputChange('bio', e.target.value)}
                   rows="6"
+<<<<<<< HEAD
                   className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-blue-500 transition-colors duration-200 resize-none"
                   placeholder="Describe your professional background, achievements, and career goals..."
                 />
               ) : (
                 <div className="text-gray-900 bg-gray-50 rounded-xl px-4 py-6 min-h-[120px]">
+=======
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-transparent focus:ring-4 focus:ring-indigo-200 transition-all duration-200 resize-none bg-white/70"
+                  placeholder="Describe your professional background, achievements, and career goals..."
+                />
+              ) : (
+                <div className="text-gray-900 bg-gray-50 rounded-xl px-4 py-6 min-h-[120px] ring-1 ring-black/5">
+>>>>>>> da4180d (Initial commit)
                   {formData.bio ? (
                     <p className="leading-relaxed">{formData.bio}</p>
                   ) : (
@@ -882,9 +1082,15 @@ const UserProfile = () => {
           {/* Skills & Languages */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Skills */}
+<<<<<<< HEAD
             <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
               <div className="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4">
                 <h3 className="text-lg font-bold text-white flex items-center">
+=======
+            <div id="skills" className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl overflow-hidden ring-1 ring-black/5">
+              <div className="bg-gradient-to-r from-violet-600 to-pink-600 px-6 py-4">
+                <h3 className="text-lg font-extrabold text-white flex items-center tracking-wide">
+>>>>>>> da4180d (Initial commit)
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                   </svg>
@@ -900,12 +1106,20 @@ const UserProfile = () => {
                       value={newSkill}
                       onChange={(e) => setNewSkill(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && addSkill()}
+<<<<<<< HEAD
                       className="flex-1 border-2 border-gray-200 rounded-l-xl px-3 py-2 text-gray-800 focus:outline-none focus:border-purple-500 transition-colors duration-200"
+=======
+                      className="flex-1 border border-gray-200 rounded-l-xl px-3 py-2 text-gray-800 focus:outline-none focus:border-transparent focus:ring-4 focus:ring-violet-200 transition-all duration-200 bg-white/70"
+>>>>>>> da4180d (Initial commit)
                       placeholder="Add a skill..."
                     />
                     <button
                       onClick={addSkill}
+<<<<<<< HEAD
                       className="bg-purple-600 text-white px-4 py-2 rounded-r-xl hover:bg-purple-700 transition-colors duration-200"
+=======
+                      className="bg-violet-600 text-white px-4 py-2 rounded-r-xl hover:bg-violet-700 transition-all duration-200 shadow"
+>>>>>>> da4180d (Initial commit)
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -918,7 +1132,11 @@ const UserProfile = () => {
                   {formData.skills.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
                       {formData.skills.map((skill, index) => (
+<<<<<<< HEAD
                         <div key={index} className="flex items-center bg-purple-50 text-purple-800 px-3 py-1 rounded-full text-sm">
+=======
+                        <div key={index} className="flex items-center bg-violet-50 text-violet-800 px-3 py-1 rounded-full text-sm ring-1 ring-black/5">
+>>>>>>> da4180d (Initial commit)
                           <span>{skill}</span>
                           {isEditing && (
                             <button
@@ -941,9 +1159,15 @@ const UserProfile = () => {
             </div>
 
             {/* Languages */}
+<<<<<<< HEAD
             <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
               <div className="bg-gradient-to-r from-orange-600 to-red-600 px-6 py-4">
                 <h3 className="text-lg font-bold text-white flex items-center">
+=======
+            <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl overflow-hidden ring-1 ring-black/5">
+              <div className="bg-gradient-to-r from-orange-600 to-rose-600 px-6 py-4">
+                <h3 className="text-lg font-extrabold text-white flex items-center tracking-wide">
+>>>>>>> da4180d (Initial commit)
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
                   </svg>
@@ -959,12 +1183,20 @@ const UserProfile = () => {
                       value={newLanguage}
                       onChange={(e) => setNewLanguage(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && addLanguage()}
+<<<<<<< HEAD
                       className="flex-1 border-2 border-gray-200 rounded-l-xl px-3 py-2 text-gray-800 focus:outline-none focus:border-orange-500 transition-colors duration-200"
+=======
+                      className="flex-1 border border-gray-200 rounded-l-xl px-3 py-2 text-gray-800 focus:outline-none focus:border-transparent focus:ring-4 focus:ring-orange-200 transition-all duration-200 bg-white/70"
+>>>>>>> da4180d (Initial commit)
                       placeholder="Add a language..."
                     />
                     <button
                       onClick={addLanguage}
+<<<<<<< HEAD
                       className="bg-orange-600 text-white px-4 py-2 rounded-r-xl hover:bg-orange-700 transition-colors duration-200"
+=======
+                      className="bg-orange-600 text-white px-4 py-2 rounded-r-xl hover:bg-orange-700 transition-all duration-200 shadow"
+>>>>>>> da4180d (Initial commit)
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -977,7 +1209,11 @@ const UserProfile = () => {
                   {formData.languages.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
                       {formData.languages.map((language, index) => (
+<<<<<<< HEAD
                         <div key={index} className="flex items-center bg-orange-50 text-orange-800 px-3 py-1 rounded-full text-sm">
+=======
+                        <div key={index} className="flex items-center bg-orange-50 text-orange-800 px-3 py-1 rounded-full text-sm ring-1 ring-black/5">
+>>>>>>> da4180d (Initial commit)
                           <span>{language}</span>
                           {isEditing && (
                             <button
@@ -1001,9 +1237,15 @@ const UserProfile = () => {
           </div>
 
           {/* Job Preferences */}
+<<<<<<< HEAD
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
             <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-6">
               <h3 className="text-xl font-bold text-white flex items-center">
+=======
+          <div id="prefs" className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl overflow-hidden ring-1 ring-black/5">
+            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-6">
+              <h3 className="text-xl font-extrabold text-white flex items-center tracking-wide">
+>>>>>>> da4180d (Initial commit)
                 <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -1020,7 +1262,11 @@ const UserProfile = () => {
                   value={formData.experienceLevel || ''}
                   onChange={(e) => handleInputChange('experienceLevel', e.target.value)}
                   disabled={!isEditing}
+<<<<<<< HEAD
                   className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-indigo-500 transition-colors duration-200 disabled:bg-gray-100"
+=======
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-transparent focus:ring-4 focus:ring-indigo-200 transition-all duration-200 disabled:bg-gray-100 bg-white/70"
+>>>>>>> da4180d (Initial commit)
                 >
                   <option value="">Select experience level</option>
                   <option value="fresher">Fresher (0-1 years)</option>
@@ -1037,7 +1283,11 @@ const UserProfile = () => {
                     value={formData.expectedSalary?.min || ''}
                     onChange={(e) => handleInputChange('expectedSalary', { ...formData.expectedSalary, min: e.target.value })}
                     disabled={!isEditing}
+<<<<<<< HEAD
                     className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-indigo-500 transition-colors duration-200 disabled:bg-gray-100"
+=======
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-transparent focus:ring-4 focus:ring-indigo-200 transition-all duration-200 disabled:bg-gray-100 bg-white/70"
+>>>>>>> da4180d (Initial commit)
                     placeholder="Min salary"
                   />
                 </div>
@@ -1048,7 +1298,11 @@ const UserProfile = () => {
                     value={formData.expectedSalary?.max || ''}
                     onChange={(e) => handleInputChange('expectedSalary', { ...formData.expectedSalary, max: e.target.value })}
                     disabled={!isEditing}
+<<<<<<< HEAD
                     className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-indigo-500 transition-colors duration-200 disabled:bg-gray-100"
+=======
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-transparent focus:ring-4 focus:ring-indigo-200 transition-all duration-200 disabled:bg-gray-100 bg-white/70"
+>>>>>>> da4180d (Initial commit)
                     placeholder="Max salary"
                   />
                 </div>
@@ -1058,7 +1312,11 @@ const UserProfile = () => {
                     value={formData.expectedSalary?.currency || 'USD'}
                     onChange={(e) => handleInputChange('expectedSalary', { ...formData.expectedSalary, currency: e.target.value })}
                     disabled={!isEditing}
+<<<<<<< HEAD
                     className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-indigo-500 transition-colors duration-200 disabled:bg-gray-100"
+=======
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-transparent focus:ring-4 focus:ring-indigo-200 transition-all duration-200 disabled:bg-gray-100 bg-white/70"
+>>>>>>> da4180d (Initial commit)
                   >
                     <option value="USD">USD</option>
                     <option value="EUR">EUR</option>
@@ -1075,7 +1333,11 @@ const UserProfile = () => {
                   value={formData.remotePreference || ''}
                   onChange={(e) => handleInputChange('remotePreference', e.target.value)}
                   disabled={!isEditing}
+<<<<<<< HEAD
                   className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-indigo-500 transition-colors duration-200 disabled:bg-gray-100"
+=======
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-transparent focus:ring-4 focus:ring-indigo-200 transition-all duration-200 disabled:bg-gray-100 bg-white/70"
+>>>>>>> da4180d (Initial commit)
                 >
                   <option value="">Select preference</option>
                   <option value="remote">Remote</option>
@@ -1093,7 +1355,11 @@ const UserProfile = () => {
                   value={formData.location || ''}
                   onChange={(e) => handleInputChange('location', e.target.value)}
                   disabled={!isEditing}
+<<<<<<< HEAD
                   className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-indigo-500 transition-colors duration-200 disabled:bg-gray-100"
+=======
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-transparent focus:ring-4 focus:ring-indigo-200 transition-all duration-200 disabled:bg-gray-100 bg-white/70"
+>>>>>>> da4180d (Initial commit)
                   placeholder="e.g., New York, NY"
                 />
               </div>
@@ -1131,7 +1397,11 @@ const UserProfile = () => {
                   value={formData.workAuthorization || ''}
                   onChange={(e) => handleInputChange('workAuthorization', e.target.value)}
                   disabled={!isEditing}
+<<<<<<< HEAD
                   className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-indigo-500 transition-colors duration-200 disabled:bg-gray-100"
+=======
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-transparent focus:ring-4 focus:ring-indigo-200 transition-all duration-200 disabled:bg-gray-100 bg-white/70"
+>>>>>>> da4180d (Initial commit)
                 >
                   <option value="">Select authorization</option>
                   <option value="citizen">Citizen</option>
@@ -1163,7 +1433,11 @@ const UserProfile = () => {
                   value={formData.noticePeriod || ''}
                   onChange={(e) => handleInputChange('noticePeriod', e.target.value)}
                   disabled={!isEditing}
+<<<<<<< HEAD
                   className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-indigo-500 transition-colors duration-200 disabled:bg-gray-100"
+=======
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:border-transparent focus:ring-4 focus:ring-indigo-200 transition-all duration-200 disabled:bg-gray-100 bg-white/70"
+>>>>>>> da4180d (Initial commit)
                 >
                   <option value="">Select notice period</option>
                   <option value="immediate">Immediate</option>

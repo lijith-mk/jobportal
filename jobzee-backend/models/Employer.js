@@ -34,7 +34,15 @@ const employerSchema = new mongoose.Schema({
     city: { type: String },
     state: { type: String },
     country: { type: String },
+<<<<<<< HEAD
     zipCode: { type: String }
+=======
+    zipCode: { type: String },
+    coordinates: {
+      latitude: { type: Number },
+      longitude: { type: Number }
+    }
+>>>>>>> da4180d (Initial commit)
   },
   
   // Online Presence
@@ -70,7 +78,12 @@ const employerSchema = new mongoose.Schema({
   },
   subscriptionStartDate: { type: Date },
   subscriptionEndDate: { type: Date },
+<<<<<<< HEAD
   jobPostingLimit: { type: Number, default: 3 },
+=======
+  // Free plan is limited to 1 job posting; paid plans may override this
+  jobPostingLimit: { type: Number, default: 1 },
+>>>>>>> da4180d (Initial commit)
   jobPostingsUsed: { type: Number, default: 0 },
   
   // Settings
@@ -85,6 +98,11 @@ const employerSchema = new mongoose.Schema({
   
   // Status
   isActive: { type: Boolean, default: true },
+<<<<<<< HEAD
+=======
+  // Soft delete timestamp
+  deletedAt: { type: Date },
+>>>>>>> da4180d (Initial commit)
   lastLoginAt: { type: Date },
   
   // Password Reset

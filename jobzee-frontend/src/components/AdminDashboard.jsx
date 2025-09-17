@@ -1108,10 +1108,9 @@ const AdminDashboard = () => {
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-<<<<<<< HEAD
-=======
+
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Verification</th>
->>>>>>> da4180d (Initial commit)
+
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                   </tr>
@@ -1130,8 +1129,6 @@ const AdminDashboard = () => {
                           {emp.isActive !== false ? 'Active' : 'Suspended'}
                         </span>
                       </td>
-<<<<<<< HEAD
-=======
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center space-x-2">
                           <span className={`px-2 py-1 text-xs rounded-full ${emp.isVerified ? 'bg-green-100 text-green-800' : emp.verificationStatus === 'rejected' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'}`}>
@@ -1139,7 +1136,7 @@ const AdminDashboard = () => {
                           </span>
                         </div>
                       </td>
->>>>>>> da4180d (Initial commit)
+
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {emp.createdAt ? new Date(emp.createdAt).toLocaleDateString() : '-'}
                       </td>

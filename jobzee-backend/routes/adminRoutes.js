@@ -7,7 +7,10 @@ const Admin = require('../models/Admin');
 const User = require('../models/User');
 const Employer = require('../models/Employer');
 const Job = require('../models/Job');
+<<<<<<< HEAD
+=======
 const ContactQuery = require('../models/ContactQuery');
+>>>>>>> da4180d (Initial commit)
 
 // Initialize admin account - SECURITY: Restrict this in production
 router.post('/init', adminLimiter, async (req, res) => {
@@ -313,8 +316,12 @@ router.get('/employers', adminAuth, checkPermission('employerManagement'), async
     const search = req.query.search || '';
     const status = req.query.status;
 
+<<<<<<< HEAD
+    const query = {};
+=======
     // Show all except deleted (keep suspended visible)
     const query = { deletedAt: { $exists: false } };
+>>>>>>> da4180d (Initial commit)
     if (search) {
       query.$or = [
         { companyName: { $regex: search, $options: 'i' } },
@@ -371,6 +378,8 @@ router.patch('/employers/:id/status', adminAuth, checkPermission('employerManage
   }
 });
 
+<<<<<<< HEAD
+=======
 // Update employer verification (verify/unverify, set status/notes/document)
 router.patch('/employers/:id/verification', adminAuth, checkPermission('employerManagement'), async (req, res) => {
   try {
@@ -422,6 +431,8 @@ router.patch('/employers/:id/verification', adminAuth, checkPermission('employer
     return res.status(500).json({ message: 'Failed to update employer verification' });
   }
 });
+
+>>>>>>> da4180d (Initial commit)
 // Create employer (admin)
 router.post('/employers', adminAuth, checkPermission('employerManagement'), async (req, res) => {
   try {
@@ -619,3 +630,90 @@ router.get('/analytics', adminAuth, checkPermission('analytics'), async (req, re
 });
 
 module.exports = router;
+<<<<<<< HEAD
+=======
+
+// Contact Queries Management
+router.get('/queries', adminAuth, async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const search = String(req.query.search || '').trim();
+    const status = String(req.query.status || '').trim();
+
+    const query = {};
+    if (status) query.status = status;
+    if (search) {
+      query.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } },
+        { subject: { $regex: search, $options: 'i' } }
+      ];
+    }
+
+    const [items, total] = await Promise.all([
+      ContactQuery.find(query)
+        .sort({ createdAt: -1 })
+        .limit(limit * 1)
+        .skip((page - 1) * limit),
+      ContactQuery.countDocuments(query)
+    ]);
+
+    res.json({
+      queries: items,
+      totalPages: Math.ceil(total / limit),
+      currentPage: page,
+      totalQueries: total
+    });
+  } catch (error) {
+    console.error('Get queries error:', error);
+    res.status(500).json({ message: 'Failed to fetch contact queries' });
+  }
+});
+
+router.patch('/queries/:id/status', adminAuth, async (req, res) => {
+  try {
+    const { status } = req.body;
+    if (!['new', 'in_progress', 'resolved'].includes(status)) {
+      return res.status(400).json({ message: 'Invalid status' });
+    }
+    const doc = await ContactQuery.findByIdAndUpdate(
+      req.params.id,
+      { $set: { status } },
+      { new: true }
+    );
+    if (!doc) return res.status(404).json({ message: 'Query not found' });
+    res.json({ message: 'Status updated', query: doc });
+  } catch (error) {
+    console.error('Update query status error:', error);
+    res.status(500).json({ message: 'Failed to update query status' });
+  }
+});
+
+router.patch('/queries/:id/notes', adminAuth, async (req, res) => {
+  try {
+    const { adminNotes } = req.body;
+    const doc = await ContactQuery.findByIdAndUpdate(
+      req.params.id,
+      { $set: { adminNotes: String(adminNotes || '').trim() } },
+      { new: true }
+    );
+    if (!doc) return res.status(404).json({ message: 'Query not found' });
+    res.json({ message: 'Notes updated', query: doc });
+  } catch (error) {
+    console.error('Update query notes error:', error);
+    res.status(500).json({ message: 'Failed to update query notes' });
+  }
+});
+
+router.delete('/queries/:id', adminAuth, async (req, res) => {
+  try {
+    const result = await ContactQuery.deleteOne({ _id: req.params.id });
+    if (result.deletedCount === 0) return res.status(404).json({ message: 'Query not found' });
+    res.json({ message: 'Query deleted' });
+  } catch (error) {
+    console.error('Delete query error:', error);
+    res.status(500).json({ message: 'Failed to delete query' });
+  }
+});
+>>>>>>> da4180d (Initial commit)
